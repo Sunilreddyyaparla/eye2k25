@@ -1,0 +1,161 @@
+/* Base Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Navigation Styles */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+    background-color: #555;
+}
+.sidenav a.active {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    padding:2%;
+}
+
+.menu-btn {
+    font-size: 30px;
+    cursor: pointer;
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 2;
+    color: #fff;
+}
+
+.main-content {
+    transition: margin-left .5s;
+    padding: 20px;
+}
+
+/* Heading Styles */
+.dynamic-heading {
+    text-align: center;
+    color: white;
+    margin: 50px 0 20px 0;
+    font-size: 2rem;
+    animation: glow 1s infinite;
+}
+
+@keyframes glow {
+    0%, 25%, 100% { 
+        text-shadow: 0px 0px 25px rgba(19, 217, 108, 0.8); 
+    } 
+    50%, 75% { 
+        text-shadow: 0 0 25px rgba(231, 10, 10, 0.8); 
+    } 
+}
+
+/* Event Container Styles */
+.event-container {
+    display: inline-block;
+    width: 320px;
+    height: 500px;
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.event-container:hover {
+    transform: translateY(-5px);
+}
+
+.event-image {
+    width: 250px;
+    height: auto;
+    margin: 10px 0 15px 0;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.event-container:hover .event-image {
+    transform: scale(1.1);
+}
+
+/* Typography */
+h3 {
+    color: #333;
+    margin: 10px 0;
+}
+
+.event-container p {
+    margin: 5px 0;
+    color: #666;
+}
+
+/* Button Styles */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+/* Responsive Design */
+@media screen and (min-width: 768px) {
+    .event-container {
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+    .sidenav a {
+        font-size: 18px;
+    }
+}

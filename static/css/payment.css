@@ -1,0 +1,130 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  color: #333;
+}
+
+.details-card {
+  background-color: #f0f4f8;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 5px solid #007bff;
+}
+
+.details-card p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.payment-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.payment-option {
+  flex: 1 1 calc(33.333% - 20px);
+  min-width: 200px;
+  text-align: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #f9f9f9;
+}
+
+.payment-option:hover {
+  border-color: #007bff;
+  background-color: #e8f4ff;
+}
+
+.payment-option.selected {
+  border-color: #007bff;
+  background-color: #e0f7ff;
+}
+
+.payment-form {
+  display: none;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.pay-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.pay-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .payment-options {
+      flex-direction: column;
+  }
+
+  .payment-option {
+      min-width: 100%;
+  }
+  .container {
+    padding: 10px;
+}
+}
+.payment-option.selected {
+  border: 2px solid #4CAF50;
+  background-color: #f9f9f9;
+}
+

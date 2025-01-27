@@ -1,0 +1,12 @@
+/* Footer Styles */
+footer {
+  text-align: center;
+  color: #fff;
+  padding: 10px; /* Reduced padding to decrease height */
+  position: fixed;
+  bottom: 0;
+  width: 100%; /* Ensures it spans the device width */
+  background-color: #1a1a1a; /* Updated solid background color */
+  font-size: 14px; /* Adjusted font size for better fit */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow effect */
+}
