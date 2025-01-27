@@ -6,7 +6,6 @@
     <title>Image Slideshow</title>
     <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
     <link rel="stylesheet" href="static/css/gallery.css">
-    <link rel="stylesheet" href="static/css/footer.css">
 </head>
 <body>
     <div id="mySidenav" class="sidenav">
@@ -24,38 +23,64 @@
     <div class="main-content">
         <h1 class="gallery-header">Electrical Family</h1>
         <div class="slideshow-container">
-            <img src="{{ url_for('static', filename='images/finalgrp.jpg') }}" alt="Slide 1" class="slide active">
-            <img src="{{ url_for('static', filename='images/3rd year grp.jpg') }}" alt="Slide 2" class="slide">
-            <img src="{{ url_for('static', filename='images/circuit.png') }}" alt="Slide 3" class="slide">
-            <img src="{{ url_for('static', filename='images/quiz.png') }}" alt="Slide 4" class="slide">
-            <img src="{{ url_for('static', filename='images/projectexpo.png') }}" alt="Slide 5" class="slide">
-            <button class="nav-btn prev-btn">&#10094;</button>
-            <button class="nav-btn next-btn">&#10095;</button>
+            <div class="slide-wrapper">
+                <img src="{{ url_for('static', filename='images/finalgrp.jpg') }}" alt="Slide 1" class="slide active">
+                <img src="{{ url_for('static', filename='images/3rd year grp.jpg') }}" alt="Slide 2" class="slide">
+                <img src="{{ url_for('static', filename='images/circuit.png') }}" alt="Slide 3" class="slide">
+                <img src="{{ url_for('static', filename='images/quiz.png') }}" alt="Slide 4" class="slide">
+                <img src="{{ url_for('static', filename='images/projectexpo.png') }}" alt="Slide 5" class="slide">
+            </div>
+            <button class="nav-btn prev-btn" aria-label="Previous slide">&#10094;</button>
+            <button class="nav-btn next-btn" aria-label="Next slide">&#10095;</button>
         </div>
         
         <h1 class="gallery-header">Tech Fest Gallery</h1>
         <div class="image-gallery-container">
             <div class="image-gallery">
-                <img src="{{ url_for('static', filename='images/festgrp.jpg') }}" alt="Image 1">
-                <img src="{{ url_for('static', filename='images/Poster.png') }}" alt="Image 2">
-                <img src="{{ url_for('static', filename='images/RAJESH PIC.jpg') }}" alt="Image 3">
-                <img src="{{ url_for('static', filename='images/passport pic.jpg') }}" alt="Image 4">
-                <img src="{{ url_for('static', filename='images/siddh pic.jpg') }}" alt="Image 5">
-                <img src="{{ url_for('static', filename='images/batch12.jpg') }}" alt="Image 6">
-                <img src="{{ url_for('static', filename='images/hod.png') }}" alt="Image 7">
-                <img src="{{ url_for('static', filename='images/sujatha.png') }}" alt="Image 8">
-                <img src="{{ url_for('static', filename='images/final.jpg') }}" alt="Image 9">
-                <img src="{{ url_for('static', filename='images/getgrp.jpg') }}" alt="Image 10">
-                <img src="{{ url_for('static', filename='images/batch12.jpg') }}" alt="Image 11">
-                <img src="{{ url_for('static', filename='images/girlsgrp.jpg') }}" alt="Image 12">
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/festgrp.jpg') }}" alt="Image 1" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/Poster.png') }}" alt="Image 2" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/RAJESH PIC.jpg') }}" alt="Image 3" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/passport pic.jpg') }}" alt="Image 4" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/siddh pic.jpg') }}" alt="Image 5" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/batch12.jpg') }}" alt="Image 6" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/hod.png') }}" alt="Image 7" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/sujatha.png') }}" alt="Image 8" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/final.jpg') }}" alt="Image 9" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/getgrp.jpg') }}" alt="Image 10" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/batch12.jpg') }}" alt="Image 11" loading="lazy">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/girlsgrp.jpg') }}" alt="Image 12" loading="lazy">
+                </div>
             </div>
         </div>
     </div>
-</br>
+
     <div class="footer-container">
         <footer>
-            &copy; Department of Electrical and Electronics Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            All  Rights are  Reserved
+            <span>&copy; Department of Electrical and Electronics Engineering</span>
+            <span>All Rights are Reserved</span>
         </footer>
     </div>
     
@@ -78,6 +103,8 @@
             const nextBtn = document.querySelector('.next-btn');
             let currentSlide = 0;
             let slideInterval;
+            let touchStartX = 0;
+            let touchEndX = 0;
 
             function showSlide(index) {
                 slides.forEach(slide => slide.classList.remove('active'));
@@ -103,6 +130,32 @@
                 resetAutoSlide();
             });
 
+            // Touch events for mobile swipe
+            const slideshowContainer = document.querySelector('.slideshow-container');
+            
+            slideshowContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+
+            slideshowContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].clientX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const swipeDistance = touchEndX - touchStartX;
+                
+                if (Math.abs(swipeDistance) > swipeThreshold) {
+                    if (swipeDistance > 0) {
+                        prevSlide();
+                    } else {
+                        nextSlide();
+                    }
+                    resetAutoSlide();
+                }
+            }
+
             function startAutoSlide() {
                 slideInterval = setInterval(nextSlide, 3000);
             }
@@ -113,6 +166,15 @@
             }
 
             startAutoSlide();
+
+            // Pause slideshow when tab is not visible
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(slideInterval);
+                } else {
+                    startAutoSlide();
+                }
+            });
         });
     </script>
 </body>
