@@ -9,8 +9,6 @@ body {
     min-height: 100vh;
     background: linear-gradient(to right, rgb(231, 117, 206), rgb(69, 220, 117), rgb(81, 163, 230));
     background-size: cover;
-    background-attachment: fixed;
-    overflow-x: hidden;
 }
 
 /* Side Navigation */
@@ -30,7 +28,7 @@ body {
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: 20px;
     color: #818181;
     display: block;
     transition: 0.3s;
@@ -40,11 +38,10 @@ body {
     color: #f1f1f1;
     background-color: #555;
 }
-
 .sidenav a.active {
-    background-color: #4CAF50;
+    background-color: #4CAF50; /* Green */
     color: white;
-}
+  }
 
 .sidenav .closebtn {
     position: absolute;
@@ -52,7 +49,7 @@ body {
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
-    padding: 2%;
+    padding:2%;
 }
 
 .menu-btn {
@@ -63,49 +60,39 @@ body {
     top: 20px;
     z-index: 101;
     color: #fff;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px 10px;
-    border-radius: 5px;
 }
 
 .main-content {
     transition: margin-left .5s;
-    padding: clamp(10px, 3vw, 20px);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 1800px; /* Increased max-width */
-    margin: 0 auto;
 }
 
 /* Gallery Styles */
-.gallery-header {
-    text-align: center;
-    margin: clamp(20px, 4vw, 40px) 0;
-    padding: clamp(10px, 2vw, 20px);
-    border-radius: 10px;
-    color: white;
-    font-size: clamp(24px, 3vw, 36px);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+h1 {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
+.gallery-header {
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 2pc;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
 
 .slideshow-container {
     position: relative;
     width: 90%;
     max-width: 1200px;
-    height: clamp(300px, 60vh, 600px);
+    height: 60vh;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border-radius: 25px;
-    margin-bottom: clamp(20px, 4vw, 40px);
-}
-
-.slide-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    margin-bottom: 20px;
 }
 
 .slide {
@@ -128,16 +115,10 @@ body {
     background-color: rgba(0,0,0,0.5);
     color: white;
     border: none;
-    padding: clamp(8px, 2vw, 15px);
+    padding: 10px 15px;
     cursor: pointer;
     z-index: 10;
     transition: background-color 0.3s;
-    border-radius: 50%;
-    width: clamp(40px, 6vw, 50px);
-    height: clamp(40px, 6vw, 50px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .nav-btn:hover {
@@ -153,115 +134,43 @@ body {
 }
 
 .image-gallery-container {
-    width: 95%; /* Increased width */
-    max-width: 1600px; /* Increased max-width */
-    padding: clamp(10px, 3vw, 20px);
+    width: 100%;
+    max-width: 1400px;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border-radius: 10px;
-    backdrop-filter: blur(5px);
 }
 
 .image-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: clamp(20px, 4vw, 60px);
-    padding: clamp(10px, 2vw, 20px);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 80px;
 }
 
-.gallery-item {
-    aspect-ratio: 4/3;
-    overflow: hidden;
+.image-gallery img {
+    width: 100%;
+    height: 100%;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    position: relative;
-    background-color: rgba(0, 0, 0, 0.05);
-    width: 100%;
-    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Makes image cover the entire container */
-    object-position: center; /* Centers the image within container */
-    transition: transform 0.3s ease-in-out;
-    transform: scale(1); /* Remove initial scale down */
-    display: block; /* Removes any potential spacing */
-}
-
-.gallery-item:hover img {
-    transform: scale(1.05); /* Slight zoom on hover */
-}
-
-.footer-container {
-    margin-top: clamp(20px, 4vw, 40px);
-    width: 100%;
+.image-gallery img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
 footer {
-    font-size: clamp(14px, 2vw, 16px);
+    margin-top: 20px;
+    font-size: 0.9em;
     text-align: center;
     color: white;
-    padding: clamp(10px, 3vw, 20px);
-    background-color: rgba(0, 0, 0, 1);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    padding: 20px;
+    width: 100%;
 }
 
-footer span {
-    display: inline-block;
-}
-
-/* Media Queries */
-@media screen and (max-width: 768px) {
-    .main-content {
-        padding: 10px;
-    }
-
-    .slideshow-container {
-        height: 40vh;
-    }
-
-    .image-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 20px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .gallery-header {
-        font-size: 20px;
-        margin: 15px 0;
-    }
-
-    .image-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 15px;
-    }
-
-}
-@media screen and (max-width: 768px) {
-    footer {
-        flex-direction: column;
-        gap: 8px;
-        padding: 15px;
-    }
-
-    footer span {
-        display: block;
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    footer {
-        font-size: 12px;
-        padding: 12px;
-        gap: 6px;
-    }
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
 }
