@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slideshow</title>
+    <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
+    <link rel="stylesheet" href="static/css/gallery.css">
+    <link rel="stylesheet" href="static/css/footer.css">
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('events') }}">Events</a>
+        <a href="{{ url_for('gallery') }}" class="active">Gallery</a>
+        <a href="{{ url_for('portfolio') }}">Portfolio</a>
+        <a href="{{ url_for('aboutus') }}">About Us</a>
+        <a href="{{ url_for('contactus') }}">Contact Us</a>
+    </div>
+
+    <span class="menu-btn" onclick="openNav()">&#9776;</span>
+
+    <div class="main-content">
+        <h1 class="gallery-header">Electrical Family</h1>
+        <div class="slideshow-container">
+            <img src="{{ url_for('static', filename='images/finalgrp.jpg') }}" alt="Slide 1" class="slide active">
+            <img src="{{ url_for('static', filename='images/3rd year grp.jpg') }}" alt="Slide 2" class="slide">
+            <img src="{{ url_for('static', filename='images/circuit.png') }}" alt="Slide 3" class="slide">
+            <img src="{{ url_for('static', filename='images/quiz.png') }}" alt="Slide 4" class="slide">
+            <img src="{{ url_for('static', filename='images/projectexpo.png') }}" alt="Slide 5" class="slide">
+            <button class="nav-btn prev-btn">&#10094;</button>
+            <button class="nav-btn next-btn">&#10095;</button>
+        </div>
+        
+        <h1 class="gallery-header">Tech Fest Gallery</h1>
+        <div class="image-gallery-container">
+            <div class="image-gallery">
+                <img src="{{ url_for('static', filename='images/festgrp.jpg') }}" alt="Image 1">
+                <img src="{{ url_for('static', filename='images/Poster.png') }}" alt="Image 2">
+                <img src="{{ url_for('static', filename='images/RAJESH PIC.jpg') }}" alt="Image 3">
+                <img src="{{ url_for('static', filename='images/passport pic.jpg') }}" alt="Image 4">
+                <img src="{{ url_for('static', filename='images/siddh pic.jpg') }}" alt="Image 5">
+                <img src="{{ url_for('static', filename='images/batch12.jpg') }}" alt="Image 6">
+                <img src="{{ url_for('static', filename='images/hod.png') }}" alt="Image 7">
+                <img src="{{ url_for('static', filename='images/sujatha.png') }}" alt="Image 8">
+                <img src="{{ url_for('static', filename='images/final.jpg') }}" alt="Image 9">
+                <img src="{{ url_for('static', filename='images/getgrp.jpg') }}" alt="Image 10">
+                <img src="{{ url_for('static', filename='images/batch12.jpg') }}" alt="Image 11">
+                <img src="{{ url_for('static', filename='images/girlsgrp.jpg') }}" alt="Image 12">
+            </div>
+        </div>
+    </div>
+</br>
+    <div class="footer-container">
+        <footer>
+            &copy; Department of Electrical and Electronics Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            All  Rights are  Reserved
+        </footer>
+    </div>
+    
+    <script>
+        // Navigation Functions
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementsByClassName("main-content")[0].style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementsByClassName("main-content")[0].style.marginLeft = "0";
+        }
+
+        // Slideshow Functions
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            let currentSlide = 0;
+            let slideInterval;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                currentSlide = (index + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+
+            function prevSlide() {
+                showSlide(currentSlide - 1);
+            }
+
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetAutoSlide();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                resetAutoSlide();
+            });
+
+            function startAutoSlide() {
+                slideInterval = setInterval(nextSlide, 3000);
+            }
+
+            function resetAutoSlide() {
+                clearInterval(slideInterval);
+                startAutoSlide();
+            }
+
+            startAutoSlide();
+        });
+    </script>
+</body>
+</html>

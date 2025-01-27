@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Fest Events</title>
+    <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
+    <link rel="stylesheet" href="static/css/events.css">
+    <link rel="stylesheet" href="static/css/footer.css">
+</head>
+<body style="background-image: url('static/images/b.webp');">
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('events') }}" class="active">Events</a>
+        <a href="{{ url_for('gallery') }}">Gallery</a>
+        <a href="{{ url_for('portfolio') }}">Portfolio</a>
+        <a href="{{ url_for('aboutus') }}">About Us</a>
+        <a href="{{ url_for('contactus') }}">Contact Us</a>
+    </div>
+
+    <span class="menu-btn" onclick="openNav()">&#9776;</span>
+
+    <div class="main-content">
+        <h1 class="dynamic-heading">Tech Fest Events</h1>
+
+        <div class="event-container">
+            <h3>Project Expo</h3>
+            <img src="{{ url_for('static', filename='images/project.png') }}" alt="Project Expo" class="event-image">
+            <p><strong>Registration Fee</strong></p>
+            <p><strong>Offline Fee:</strong> ₹150</p>
+            <p><strong>Online Fee:</strong> ₹120</p>
+            <a href="{{ url_for('registration') }}"><button>Register</button></a>
+        </div>
+
+        <div class="event-container">
+            <h3>Paper Presentation</h3>
+            <img src="{{ url_for('static', filename='images/paper.png') }}" alt="Paper Presentation" class="event-image">
+            <p><strong>Registration Fee</strong></p>
+            <p><strong>Offline Fee:</strong> ₹75</p>
+            <p><strong>Online Fee:</strong> ₹60</p>
+            <a href="{{ url_for('registration') }}"><button>Register</button></a>
+        </div>
+
+        <div class="event-container">
+            <h3>Circuit Hunt</h3>
+            <img src="{{ url_for('static', filename='images/circuit.png') }}" alt="Circuit Hunt" class="event-image">
+            <p><strong>Registration Fee</strong></p>
+            <p><strong>Offline Fee:</strong> ₹75 per team</p>
+            <p><strong>Online Fee:</strong> ₹60 per team</p>
+            <a href="{{ url_for('registration') }}"><button>Register</button></a>
+        </div>
+
+        <div class="event-container">
+            <h3>Technical Quiz</h3>
+            <img src="{{ url_for('static', filename='images/quiz.png') }}" alt="Technical Quiz" class="event-image">
+            <p><strong>Registration Fee</strong></p>
+            <p><strong>Offline Fee:</strong> ₹30 per team</p>
+            <p><strong>Online Fee:</strong> ₹25 per team</p>
+            <a href="{{ url_for('registration') }}"><button>Register</button></a>
+        </div>
+
+        <div class="event-container">
+            <h3>Poster Presentation</h3>
+            <img src="{{ url_for('static', filename='images/Poster.png') }}" alt="Poster Presentation" class="event-image">
+            <p><strong>Registration Fee</strong></p>
+            <p><strong>Offline Fee:</strong> ₹45</p>
+            <p><strong>Online Fee:</strong> ₹35</p>
+            <a href="{{ url_for('registration') }}"><button>Register</button></a>
+        </div>
+    </div>
+</br>
+    <div class="footer-container">
+        <footer>
+            &copy; Department of Electrical and Electronics Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            All  Rights are  Reserved
+        </footer>
+    </div>
+    
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementsByClassName("main-content")[0].style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementsByClassName("main-content")[0].style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>

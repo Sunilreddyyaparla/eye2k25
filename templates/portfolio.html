@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Core Members</title>
+    <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
+    <link rel="stylesheet" href="static/css/portfolio.css">
+    <link rel="stylesheet" href="static/css/footer.css">
+</head>
+<body>
+    <!-- Side Navigation -->
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('events') }}">Events</a>
+        <a href="{{ url_for('gallery') }}">Gallery</a>
+        <a href="{{ url_for('portfolio') }}" class="active">Portfolio</a>
+        <a href="{{ url_for('aboutus') }}">About Us</a>
+        <a href="{{ url_for('contactus') }}">Contact Us</a>
+    </div>
+
+    <span class="menu-btn" onclick="openNav()">&#9776;</span>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="heading-container">
+                <h1>Our Core Members</h1>
+            </div>
+            <div class="image-grid">
+                <!-- Member cards remain the same -->
+                <div class="member-card">
+                    <img src="" alt="Vice Chancellor">
+                    <p class="designation">Vice Chancellor</p>
+                    <p class="name">Name 1</p>
+                </div>
+                <div class="member-card">
+                    <img src="{{ url_for('static', filename='images/Principal.png') }}" alt="Principal">
+                    <p class="designation">Principal</p>
+                    <p class="name">P. Chenna Reddy</p>
+                </div>
+                <!-- ... rest of the member cards ... -->
+                 <div class="member-card">
+                    <img src="{{ url_for('static', filename='images/viceprincipal.png') }}" alt="Vice Principal">
+                <p class="designation">Vice Principal</p>
+                <p class="name">S.Vasundra</p>
+            </div>
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/i 3.png') }}" alt="HOD">
+                <p class="designation">Head of the Department</p>
+                <p class="name">Dr.M.Ramasekhara Reddy</p>
+            </div>
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/vijay.png') }}" alt="Dr.M.Vijaya Kumar">
+                <p class="designation">Professor</p>
+                <p class="name">Dr.M.Vijaya Kumar</p>
+            </div>
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/sujatha.png') }}" alt="Dr P Sujatha">
+                <p class="designation">Director of FA & AM</p>
+                <p class="name">Dr P Sujatha</p>
+            </div>
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/Kiranmayi.png') }}" alt="Dr R Kiranmayi">
+                <p class="designation">Director of Admissions</p>
+                <p class="name">Dr R Kiranmayi</p>
+            </div>
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/goud.png') }}" alt="Dr K Jithendra Gowd">
+                <p class="designation">Asst. Professor</p>
+                <p class="name">Dr K Jithendra Gowd</p>
+            </div><div class="member-card">
+                <img src="{{ url_for('static', filename='images/sridhar.png') }}" alt="Sri S Sridhar">
+                <p class="designation">Asst. Professor</p>
+                <p class="name">Sri S Sridhar</p>
+            </div>
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/jump.png') }}" alt="Dr J Sreenivasulu">
+                <p class="designation">Placement Coordinator</p>
+                <p class="name">Dr J Sreenivasulu</p>
+            </div>
+            
+            <div class="member-card">
+                <img src="{{ url_for('static', filename='images/anki.png') }}" alt="Dr Ankarao Mogili">
+                <p class="designation">Designation 11</p>
+                <p class="name">Dr Ankarao Mogili</p>
+            </div>
+        </div>  
+        
+    </div>
+    <div class="footer-container">
+        <footer>
+            &copy; Department of Electrical and Electronics Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            All  Rights are  Reserved
+        </footer>
+    </div>
+    
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementsByClassName("main-content")[0].style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementsByClassName("main-content")[0].style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>

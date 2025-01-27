@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Contact Page</title>
+    <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
+    <link rel="stylesheet" href="static/css/footer.css">
+    <link rel="stylesheet" href="static/css/contact.css">
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('events') }}" >Events</a>
+        <a href="{{ url_for('gallery') }}">Gallery</a>
+        <a href="{{ url_for('portfolio') }}">Portfolio</a>
+        <a href="{{ url_for('aboutus') }}">About Us</a>
+        <a href="{{ url_for('contactus') }}" class="active">Contact Us</a>
+    </div>
+
+    <span class="menu-btn" onclick="openNav()">&#9776;</span>
+    
+    <div class="container">
+</br></br>
+    <div class="team-grid">
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/i 3.png') }}" alt="Convenor">
+            <h3>Dr M Ramasekhara Reddy</h3>
+            <p>Convenor</p>
+            <p>📞 +91 98765 43210</p>
+        </div>
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/jump.png') }}" alt="Faculty Coordinator">
+            <h3>Prof. John Doe</h3>
+            <p>Faculty Coordinator</p>
+            <p>📞 +91 98765 43211</p>
+        </div>
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/jump.png') }}" alt="Coordinator 1">
+            <h3>Alice Johnson</h3>
+            <p>Student Coordinator</p>
+            <p>📞 +91 98765 43212</p>
+        </div>
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/jump.png') }}" alt="Coordinator 2">
+            <h3>Bob Wilson</h3>
+            <p>Student Coordinator</p>
+            <p>📞 +91 98765 43213</p>
+        </div>
+    </div>
+
+    <div class="tech-coordinators">
+        <h2>Technical Coordinators</h2>
+        <div class="tech-grid">
+            <div>
+                <h3>Srikanth Gujjala</h3>
+                <p>📞 +91 6303783807</p>
+            </div>
+            <div>
+                <h3>Sunil Kumar Reddy Yaparla</h3>
+                <p>📞 +91 9392459171</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="social-links">
+            <a href="mailto:sunilreddyyaparla@gmail.com">✉️ eye2k25@gmail.com</a>
+            <a href="https://instagram.com/example">📸 Instagram</a>
+            <a href="https://facebook.com/example">👥 Facebook</a>
+            <a href="https://twitter.com/example">🐦 Twitter</a>
+            <a href="https://youtube.com/example">📺 YouTube</a>
+        </div>
+    </div>
+    <!-- New designer text -->
+    <div class="designer-text" style="text-align: center; color: white; margin-top: 20px;">
+        Designed and Developed by Sunil Kumar Reddy Yaparla & Co
+    </div>
+</div>
+</br></br>
+<div class="footer-container">
+    <footer>
+        &copy; Department of Electrical and Electronics Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        All  Rights are  Reserved
+    </footer>
+</div>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementsByClassName("main-content")[0].style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementsByClassName("main-content")[0].style.marginLeft = "0";
+    }
+</script>
+</body>
+</html>

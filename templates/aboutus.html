@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Sidebar Navigation</title>
+    <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
+    <link rel="stylesheet" href="static/css/footer.css">
+    <link rel="stylesheet" href="static/css/about.css">
+</head>
+<body>
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('events') }}" >Events</a>
+    <a href="{{ url_for('gallery') }}">Gallery</a>
+    <a href="{{ url_for('portfolio') }}">Portfolio</a>
+    <a href="{{ url_for('aboutus') }}" class="active">About Us</a>
+    <a href="{{ url_for('contactus') }}">Contact Us</a>
+</div>
+
+<span class="menu-btn" onclick="openNav()">&#9776;</span>
+    </br></br></br>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <h1 class="nav-header">Navigation</h1>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <button class="nav-button active" onclick="showContent('eye2k25')">About EYE2K25</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('department')">About Department</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('institution')">About Institution</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('hod')">Head of the Department</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('courses')">Courses</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('faculty')">Faculty</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('students')">Students</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('infrastructure')">Infrastructure</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" onclick="showContent('contact')">Contact Info</button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- EYE2K25 Section -->
+                <div id="eye2k25" class="content-section active">
+                    <div class="content-inner">
+                        <div class="bg-section" style="background-image: url('static/images/eye logo.png')"> 
+                        </div>
+                    </br></br>
+                        <h2 class="section-title">About EYE 2K25</h2>
+                        <p class="section-text">EYE Electrify Your Education is a prestigious national-level technical symposium organized by the Department of Electrical and Electronics Engineering, JNTUA CEA. This one-day event provides a platform for students to exhibit their technical skills and knowledge through a variety of engaging activities, including workshops, circuit hunts, project exhibitions, paper presentations, and quizzes.</p>
+                    </div>
+                </div>
+            
+
+           <!-- Department Section -->
+<div id="department" class="content-section">
+  <div class="bg-section" style="background-image: url('static/images/dept.png'); text-align: left;">
+      <h2 style="color: aquamarine;">Department of EEE</h2>
+  </div>
+  <br><br>
+  <h2 class="section-title">About Department</h2>
+  <p class="section-text">
+      The Department of Electrical Engineering, established in 1946, offers B.Tech and M.Tech programs in various specializations, including Electrical and Electronics Engineering, Electrical Power Systems, Power and Industrial Drives, and Control Systems. The department also provides part-time M.Tech programs and Ph.D. research opportunities.
+      The department is equipped with well-furnished laboratories and a library, offering students access to computing facilities, software packages, and learning resources. Faculty members actively engage in research in areas like Electrical Power Systems, Power Electronics, Industrial Drives, Reliability Engineering, and Control Systems.
+      The department has a strong industry connection, with alumni holding significant positions in both public and private sectors. It also collaborates with organizations like PRDC, Bangalore, to foster innovation and development.
+  </p>
+  <br><br>
+  <!-- Responsive Map -->
+  <div style="position: relative; overflow: hidden; padding-top: 56.25%; /* 16:9 Aspect Ratio */">
+      <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d757.1429487758267!2d77.60596670867285!3d14.650190625917682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb14a5542dfd6f9%3A0x537ab7771317a7da!2sEEE%20Department%20JNTU%20campus!5e0!3m2!1sen!2sin!4v1735563812951!5m2!1sen!2sin"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+  </div>
+</div>
+
+            
+
+            <!-- Institution Section -->
+            <div id="institution" class="content-section">
+                <div class="bg-section" style="background-image: url('static/images/jntu.png')">
+                    <h2 style="color: white;">Jawaharlal Nehru Technological University Anantapur</h2>
+                </div>
+            </br></br>
+            <h2 class="section-title">About Institution</h2>
+            <p class="section-text">JNTUA College of Engineering, Ananthapuramu stands aloft on a solid foundation of past glory and prestige. This college was started in the year 1946, under the post-war reconstruction program and functioned at Guindy campus, Madras for two years before moving to Anantapur in 1948. By 1958, the college settled into the present permanent buildings, including the Administrative block, Laboratories, Engineering Departments, Library, and Hostel blocks. Over the years, the college has been affiliated with Madras University, S V University, and JNTU Hyderabad. Since 2008, it has been a constituent college of JNT University Anantapur. With a campus sprawling over 185 acres, it serves as a center for technical education in a peaceful, conducive environment for learning.</p>
+            </div>
+
+            <!-- Other Sections -->
+            <div id="hod" class="content-section">
+                <div class="content-inner">
+                  <img src='static/images/i 3.png' alt="Head of Department" style="width: 200px; height: auto;">
+                  <h2 class="section-title">Head of the Department</h2>
+                  <p class="section-text">Dr. M. Ramasekharreddy, currently leading our department with over 20 years of experience in academia and research. Under her leadership, the department has achieved numerous milestones.</p>
+                </div>
+                <table>
+                    <tr>
+                        <th>Qualification</th>
+                        <td>M.Tech, Ph.D</td>
+                    </tr>
+                    <tr>
+                        <th>Experience</th>
+                        <td>
+                            <ul>
+                                <li>Total: 20 Years</li>
+                                <li>Teaching: 19 Years</li>
+                                <li>Research: 12 Years</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Publications</th>
+                        <td>
+                            <table>
+                                <tr>
+                                    <th>Journals</th>
+                                    <th>Conferences</th>
+                                </tr>
+                                <tr>
+                                    <td>International: 28<br>National: -</td>
+                                    <td>International: 4<br>National: 1</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Research Areas</th>
+                        <td>
+                            <ul>
+                                <li>Wind Energy</li>
+                                <li>Microprocessors & Microcontrollers</li>
+                                <li>Power Quality</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Contact Details</th>
+                        <td>
+                            <ul>
+                                <li>Address: Professor & HOD, EEE Department, JNTUA CEA, Ananthapuramu</li>
+                                <li>Mobile: 9948934660</li>
+                                <li>Email: ramasekharreddy.eee@jntua.ac.in</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="courses" class="content-section">
+                <div class="content-inner">
+                    <h2 class="section-title">Courses</h2>
+                    <p class="section-text">We offer a wide range of undergraduate and postgraduate courses in Electrical and Electronics, including specializations in Power Systems, Power Electronics, and Control Systems.</p>
+                </div>
+            </div>
+
+            <div id="faculty" class="content-section">
+                <div class="content-inner">
+                    <h2 class="section-title">Faculty</h2>
+                    <p class="section-text">Our faculty members are highly qualified professionals with extensive experience in teaching and research, many holding PhDs from prestigious institutions.</p>
+                </div>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Qualification</th>
+                        <th>Joining Date</th>
+                    </tr>
+                    <tr>
+                        <td>Dr. M Ramasekhara Reddy</td>
+                        <td>Assistant Professor & HOD</td>
+                        <td>Ph.D</td>
+                        <td>03-02-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. M Vijaya Kumar</td>
+                        <td>Professor </td>
+                        <td>Ph.D</td>
+                        <td>19-10-1992</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. P Sujatha</td>
+                        <td>Professor & Director of Foreign Affairs & Alumini Matters</td>
+                        <td>Ph.D</td>
+                        <td>31-05-2003</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. R Kiranmayi</td>
+                        <td>Professor & Director of Admissions</td>
+                        <td>Ph.D</td>
+                        <td>22-10-1999</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. K Jithendra Gowd</td>
+                        <td>Assistant Professor</td>
+                        <td>Ph.D</td>
+                        <td>03-02-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. J Sreenivasulu</td>
+                        <td>Assistant Professor</td>
+                        <td>Ph.D</td>
+                        <td>01-02-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Sri S Sridhar</td>
+                        <td>Assistant Professor</td>
+                        <td>M.Tech (Ph.D)</td>
+                        <td>09-02-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Ankarao Mogili</td>
+                        <td>Assistant Professor</td>
+                        <td>Ph.D</td>
+                        <td>01-02-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Dr. P. Bharat Kumar</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>Ph.D</td>
+                        <td>24-09-2008</td>
+                    </tr>
+                    <tr>
+                        <td>Sri K. Nagabhushanam</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>27-06-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Smt Y. Manasa</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech (Ph.D)</td>
+                        <td>24-06-2013</td>
+                    </tr>
+                    <tr>
+                        <td>Sri P. Rizwan</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech (Ph.D)</td>
+                        <td>20-11-2014</td>
+                    </tr>
+                    <tr>
+                        <td>Smt M. Nagachaitra</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>30-06-2016</td>
+                    </tr>
+                    <tr>
+                        <td>Sri M. Rathaiah</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech (Ph.D)</td>
+                        <td>22-09-2011</td>
+                    </tr>
+                    <tr>
+                        <td>Ms K. Firdose Kowser Ahamadia</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>01-09-2017</td>
+                    </tr>
+                    <tr>
+                        <td>Ms D. Kalyani</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech (Ph.D)</td>
+                        <td>02-07-2018</td>
+                    </tr>
+                    <tr>
+                        <td>Ms S. Anusha</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech (Ph.D)</td>
+                        <td>04-07-2018</td>
+                    </tr>
+                    <tr>
+                        <td>Smt N. Swathi</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>02-07-2018</td>
+                    </tr>
+                    <tr>
+                        <td>Sri P.A. Prabhakara</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>02-07-2018</td>
+                    </tr>
+                    <tr>
+                        <td>Ms M. Shirisha</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>16-03-2020</td>
+                    </tr>
+                    <tr>
+                        <td>Smt P. Swathi</td>
+                        <td>Assistant Professor (Adhoc)</td>
+                        <td>M.Tech</td>
+                        <td>16-03-2020</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="students" class="content-section">
+                <div class="content-inner">
+                    <h2 class="section-title">Students</h2>
+                    <p class="section-text">Our students consistently excel in academics and extra-curricular activities, with many securing positions in top companies and universities worldwide.</p>
+                </div>
+                <h2>B.Tech Students</h2>
+            </br>
+
+            <table>
+              <tr>
+                <th>Final Year</th>
+                <th>Third Year</th>
+                <th>Second Year</th>
+              </tr>
+              <tr>
+                <td>CHIGICHERLA NAGA NANDINI</td>
+                <td>PATHAKAMURI VARSHITHA</td>
+                <td>Gadige Jagan Mohan</td>
+              </tr>
+              <tr>
+                <td>Bolagonga Murali Krishna</td>
+                <td>B.NIKHIL</td>
+                <td>Penokonda Khuratul Ain</td>
+              </tr>
+              <tr>
+                <td>BODDUGolla Bannith Sai Ganesh</td>
+                <td>Maddannagari Vamshi</td>
+                <td>David Prarthan</td>
+              </tr>
+              <tr>
+                <td>CHINNAGANAPALLI REDDY SAI VARDHAN</td>
+                <td>Velpula Chaitanya</td>
+                <td>Patil Veera Sekhar Reddy</td>
+              </tr>
+              <tr>
+                <td>Shaik Asiya</td>
+                <td>Neigidi.Swapna</td>
+                <td>Boya Mounika</td>
+              </tr>
+              <tr>
+                <td>VADDE INDRA</td>
+                <td>Thalari Sravani</td>
+                <td>Sangamkollu Harshavardhan</td>
+              </tr>
+              <tr>
+                <td>H.Sivapankaja</td>
+                <td>Tabjula Yuva Simha Vigneshwar</td>
+                <td>Timlapur Shaik Mohammad Faheem</td>
+              </tr>
+              <tr>
+                <td>KALLURI PREM KUMAR</td>
+                <td>Majjala Likitha</td>
+                <td>Bandi Kaushik Kumar</td>
+              </tr>
+              <tr>
+                <td>Chinthamanu Borray Adithya</td>
+                <td>Brungi Chakradhar</td>
+                <td>Gedidama Vaishnavi</td>
+              </tr>
+              <tr>
+                <td>K Suneetha</td>
+                <td>Devatha Gowtham</td>
+                <td>Chapala Madhulatha</td>
+              </tr>
+              <tr>
+                <td>SHAIK FAIZUL MOIN</td>
+                <td>SHAIK MEHVEEZ JAHAN</td>
+                <td>Kota Mounika Rajeswari</td>
+              </tr>
+              <tr>
+                <td>Anusha Devangam</td>
+                <td>Kuruba Sai Ganesh</td>
+                <td>Telkar Ruchith</td>
+              </tr>
+              <tr>
+                <td>P.Kavyasree</td>
+                <td>Sake Oblesh</td>
+                <td>Guddi Nagappa Gari Nageswari</td>
+              </tr>
+              <tr>
+                <td>BODICHERLA KARTHIK</td>
+                <td>Mopuri Pallavi</td>
+                <td>Nandi Prathista</td>
+              </tr>
+              <tr>
+                <td>PAGADALA BHANU PRAKASH</td>
+                <td>Salla Akhila</td>
+                <td>Vannempalle Sireesha</td>
+              </tr>
+              <tr>
+                <td>Posa Meghana</td>
+                <td>DUSTHAKAR MONIKA</td>
+                <td>Karnam Kishan</td>
+              </tr>
+              <tr>
+                <td>K NANDINI</td>
+                <td>Banda Likhitha Sree</td>
+                <td>Vykunta Pranay Siddhardha</td>
+              </tr>
+              <tr>
+                <td>P.Poojitha</td>
+                <td>Yeggodi Sanjana</td>
+                <td>Palle Madhuri Reddy</td>
+              </tr>
+              <tr>
+                <td>S Chandana</td>
+                <td>Devarakonda Likitha</td>
+                <td>Sangavaram Lakshmi</td>
+              </tr>
+              <tr>
+                <td>Konakondla Aruna</td>
+                <td>Dasari Dharani</td>
+                <td>Kommu Joshi Rakesh</td>
+              </tr>
+              <tr>
+                <td>SANGATI CHAITANYA REDDY</td>
+                <td>Velpula Lakshmi</td>
+                <td>Mota Mounika</td>
+              </tr>
+              <tr>
+                <td>M.Hima Sai Harshitha</td>
+                <td>Pulipati Jai Kishore</td>
+                <td>Patlegar Swathi</td>
+              </tr>
+              <tr>
+                <td>Rapthati Sasikiran</td>
+                <td>Casti Vamsi</td>
+                <td>Karanam Vyshnavi Devi</td>
+              </tr>
+              <tr>
+                <td>Srikanth Gujjala</td>
+                <td>Kallur Swapna</td>
+                <td>Athmakuru Rukshitha</td>
+              </tr>
+              <tr>
+                <td>Choppa Pavan Krishna</td>
+                <td>S.Seema Sadiya</td>
+                <td>Mula Varshini</td>
+              </tr>
+              <tr>
+                <td>Shaik Mohammad Sameer</td>
+                <td>BANDLA USHA RANI</td>
+                <td>Yapadinne Maheswari</td>
+              </tr>
+              <tr>
+                <td>Shaik Shahid Parvez</td>
+                <td>Shaik Shafi</td>
+                <td>Peta Sainath</td>
+              </tr>
+              <tr>
+                <td>AVULA BALA NAGA VENKATA BHARATH KALYAN</td>
+                <td>ANGADALA JAGADEESH KUMAR</td>
+                <td>Matam Sushma</td>
+              </tr>
+              <tr>
+                <td>Putta Yamini</td>
+                <td>Mallela Jhansi Rani</td>
+                <td>Kadinti Keerthi Sai</td>
+              </tr>
+              <tr>
+                <td>CHEDDE VENU</td>
+                <td>ULIGITHI JAYANTHI</td>
+                <td>Manchala Divya</td>
+              </tr>
+              <tr>
+                <td>Sireesha S</td>
+                <td>Landa Ajay Kumar</td>
+                <td>Ullaji Prashanthi</td>
+              </tr>
+              <tr>
+                <td>SAJJALA PUNEETH GURUSAI</td>
+                <td>Githari Poojitha</td>
+                <td>Nossam Yoga</td>
+              </tr>
+              <tr>
+                <td>KONDISETTI SIDDU SAI</td>
+                <td>Nooli Venkata Giridhar</td>
+                <td>Shaik Yasar Arafath</td>
+              </tr>
+              <tr>
+                <td>Balapala Keerthana</td>
+                <td>Kondamallela Blessi Shamma</td>
+                <td>Poliki Shazeedaa</td>
+              </tr>
+              <tr>
+                <td>ROTTE SREE SAI MANOHAR</td>
+                <td>Bhajantree Pranavi</td>
+                <td>Chakali Pavani</td>
+              </tr>
+              <tr>
+                <td>KURUVA ASHOK KUMAR</td>
+                <td>Munipati Sameera</td>
+                <td>Janapala Guru Sainath</td>
+              </tr>
+              <tr>
+                <td>K N VAMSHI</td>
+                <td>ULCHALA YUVARAJU</td>
+                <td>Chintham Gopi Krishna</td>
+              </tr>
+              <tr>
+                <td>A.Sai Satyadev</td>
+                <td>BOYA THIRUMALA</td>
+                <td>Uppara Anusha</td>
+              </tr>
+              <tr>
+                <td>Vavila Kaveri</td>
+                <td>KURAPATI VIJAY KUMAR</td>
+                <td>Jeenagala Yashaswitha</td>
+              </tr>
+              <tr>
+                <td>Siddavatam Mohammad Vajid Ul Huq</td>
+                <td>BAHADUR SHIFA KOUSAR</td>
+                <td>Dungavath Mounika Bai</td>
+              </tr>
+              <tr>
+                <td>L.Rajesh Kumar Reddy</td>
+                <td>KOYYALADINNE PRASHANTH</td>
+                <td>Mutra Niteesh Reddy</td>
+              </tr>
+              <tr>
+                <td>Sasikala S M</td>
+                <td>Singamaneni Thanuja</td>
+                <td>Pillella Revanth</td>
+              </tr>
+              <tr>
+                <td>KAMBOJI SREE NIKITHA</td>
+                <td>chenchannagari charitha</td>
+                <td>Cheruvu Shanu Begum</td>
+              </tr>
+              <tr>
+                <td>J v Sai Charitha</td>
+                <td>SAGINALA REDDY GANGOTHRI</td>
+                <td>Kothapalli Ajith Krishna</td>
+              </tr>
+              <tr>
+                <td>R. Lakshmi Devi</td>
+                <td>MANIGE KRISHNA SAHITHI</td>
+                <td>Mota Charithamahalakshmi</td>
+              </tr>
+              <tr>
+                <td>Shaik Mahaboob Basha</td>
+                <td>MUSTHURU LAKSHMI PRASAD</td>
+                <td>Giddaluru Muni Vivek</td>
+              </tr>
+              <tr>
+                <td>Shaik Buvvaji Shaguftha Anjum</td>
+                <td>SIDDAVATAM IQRA FATHIMA</td>
+                <td>Kurla Kavya</td>
+              </tr>
+              <tr>
+                <td>Arveti Abhinayasree</td>
+                <td>Boya Surekha Vani</td>
+                <td>Boggula Venkata Pavan Kumar</td>
+              </tr>
+              <tr>
+                <td>Ponkala Divya Deepika</td>
+                <td>BAVIGADDA CHANDRAYUDU</td>
+                <td>Kayala Manjunatha</td>
+              </tr>
+              <tr>
+                <td>Katuboni Varshitha</td>
+                <td>SADU MUNI LOKESH BABU</td>
+                <td>Katthi Shruthi</td>
+              </tr>
+              <tr>
+                <td>Veeramallu Bhairava</td>
+                <td>Busa Veera Bhargavi</td>
+                <td>G Tharun</td>
+              </tr>
+              <tr>
+                <td>Nallabolu Manasa</td>
+                <td>Battala Lakshmi</td>
+                <td>Uligithi Shashi Kumar</td>
+              </tr>
+              <tr>
+                <td>Ediga Anuhya</td>
+                <td>Badabagni Sri Charan</td>
+                <td>Jadapalli Punith Kumar Goud</td>
+              </tr>
+              <tr>
+                <td>Murahari Prasanthi</td>
+                <td>Madiga Divya</td>
+                <td>Kethagani Adi Narayana</td>
+              </tr>
+              <tr>
+                <td>B.Sugandhar Vara Prasad</td>
+                <td>Kande Gayathri</td>
+                <td>Nannam Thulasi</td>
+              </tr>
+              <tr>
+                <td>Dasari Harika</td>
+                <td>DEVANA MAHESH</td>
+                <td>Atla Sai</td>
+              </tr>
+              <tr>
+                <td>A Vaishnavi</td>
+                <td>R Yashodha</td>
+                <td>Maylapuri Susmitha</td>
+              </tr>
+              <tr>
+                <td>SUNIL KUMAR REDDY YAPARLA</td>
+                <td>Mangala Nandini</td>
+                <td>Rangamgari Sushmitha</td>
+              </tr>
+              <tr>
+                <td>Syed Irfan</td>
+                <td>Rage Pravallika</td>
+                <td>Madiga Eswaramma</td>
+              </tr>
+              <tr>
+                <td>Gnaneswar Reddy Obulam</td>
+                <td>Gowni Baby Navya</td>
+                <td>Thonduru Ganga Sagar</td>
+              </tr>
+              <tr>
+                <td>Chippagiri Malavika</td>
+                <td>Dara Aruna</td>
+                <td>Ummala Asha</td>
+              </tr>
+              <tr>
+                <td>SAGABALI KRUPA RAO</td>
+                <td>Uppari Sai Kumar</td>
+                <td>Marthati pavani</td>
+              </tr>
+              <tr>
+                <td>JERRIPOTHULA MEGHANA</td>
+                <td>Vasu Bhargavi</td>
+                <td>Gandikota Ajay</td>
+              </tr>
+              <tr>
+                <td>Gudapareddy Pavani</td>
+                <td>KODUMURU NAVYA CHARITHA</td>
+                <td>Sirasani Sai Girinath Reddy</td>
+              </tr>
+              <tr>
+                <td>PEDDAKOTLA BALAJI</td>
+                <td>LOMADA AMRUTHA VENNELA SRI YADAV</td>
+                <td>Nenavath Ranjith Kumar Naik</td>
+              </tr>
+              <tr>
+                <td>KASIGANDLA AMEER BASHA</td>
+                <td>Shaik Hussain Basha</td>
+                <td>Chintha rajesh</td>
+              </tr>
+              <tr>
+                <td>MARRI AMULYA</td>
+                <td>KOTARI TEJA KIRAN</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>YARAM VENKATA ADITYA RAM</td>
+                <td>Palasamudram Karthik</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>PALTHYA ARAVIND NAIK</td>
+                <td></td>
+              </tr>
+            </table>
+            
+              </table>
+            </div>
+
+            <div id="infrastructure" class="content-section">
+                <div class="content-inner">
+                    <h2 class="section-title">Infrastructure</h2>
+                    <p class="section-text">Our state-of-the-art facilities provide students with the best learning environment.</p>
+                    <div class="gallery" id="infrastructureGallery"></div>
+                </div>
+            </div>
+
+            <div id="contact" class="content-section">
+                <div class="content-inner">
+                    <h2 class="section-title">Contact Information</h2>
+                    <p class="section-text">
+                        <h3>Dr. M Rama Sekhar Reddy
+                            HOD</h3></br>
+                        Email: ramsekharreddy.eee@jntua.ac.in<br>
+                        Phone: +91 9948934660<br>
+                        Address: Assistant Professor & HOD, EEE Department, JNTUA CEA, Ananthapuramu
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </br></br>
+    <!-- Modal for Gallery Images -->
+    <div class="modal" id="imageModal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Infrastructure">
+        </div>
+    </div>
+  </br></br>
+  <div class="footer-container">
+    <footer>
+        &copy; Department of Electrical and Electronics Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        All  Rights are  Reserved
+    </footer>
+</div>
+
+
+    <script>
+        // Show Content Function
+        function showContent(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active button state
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        // Infrastructure Gallery
+        const infrastructureGallery = document.getElementById('infrastructureGallery');
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+
+        // Generate gallery items
+        for(let i = 1; i <= 20; i++) {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            
+            const img = document.createElement('img');
+            img.src = `static/images/i ${i}.png`;
+            img.alt = `Infrastructure ${i}`;
+            img.onclick = () => openModal(img.src);
+            
+            galleryItem.appendChild(img);
+            infrastructureGallery.appendChild(galleryItem);
+        }
+
+        function openModal(imageSrc) {
+            modalImage.src = imageSrc;
+            imageModal.classList.add('active');
+        }
+
+        function closeModal() {
+            imageModal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        imageModal.addEventListener('click', (e) => {
+            if(e.target === imageModal) {
+                closeModal();
+            }
+        });
+    
+      function openNav() {
+          document.getElementById("mySidenav").style.width = "250px";
+          document.getElementsByClassName("main-content")[0].style.marginLeft = "250px";
+      }
+
+      function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          document.getElementsByClassName("main-content")[0].style.marginLeft = "0";
+      }
+  </script>
+</body>
+</html>
