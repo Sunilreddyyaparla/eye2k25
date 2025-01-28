@@ -15,17 +15,17 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-# SQLite Configuration with absolute path
-basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, 'eye2k25_reg.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+# PostgreSQL Configuration
+DATABASE_URL = "postgresql://eye2k25_user:S4haUy7pTIEGbGCHDWt5cINm70ZvykVY@dpg-cu9pvolumphs73cfl9f0-a.oregon-postgres.render.com/eye2k25"
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
-logger.info(f"Database path: {db_path}")
+logger.info(f"Connecting to database: {DATABASE_URL.split('@')[1]}")  # Log only the host part, not credentials
 
 db = SQLAlchemy(app)
 
+# The rest of your models should remain exactly the same
 class RegData(db.Model):
     __tablename__ = 'reg_data'
     payment_id = db.Column(db.String(100), primary_key=True)
@@ -56,7 +56,7 @@ class VisitorCount(db.Model):
     @classmethod
     def increment(cls):
         try:
-            with db.session.begin_nested():  # Use a savepoint
+            with db.session.begin_nested():
                 count_record = cls.query.with_for_update().first()
                 if count_record is None:
                     count_record = cls(count=1)
