@@ -3,19 +3,13 @@ import os
 from flask_mail import Mail, Message
 import random
 import razorpay
+import threading
 from flask_sqlalchemy import SQLAlchemy
 import logging 
 from sqlalchemy import inspect
-import sys
 
-# Enhanced logging configuration
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -23,7 +17,6 @@ app.secret_key = os.urandom(24)
 
 # Database Configuration
 DATABASE_URL = "postgresql://eye2k25_user:S4haUy7pTIEGbGCHDWt5cINm70ZvykVY@dpg-cu9pvolumphs73cfl9f0-a.oregon-postgres.render.com/eye2k25"
-
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -34,34 +27,43 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 }
 app.config['SQLALCHEMY_ECHO'] = True
 
-# Email Configuration
-app.config.update(
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=587,
-    MAIL_USE_TLS=True,
-    MAIL_USE_SSL=False,
-    MAIL_USERNAME='yaparla25@gmail.com',
-    MAIL_PASSWORD='hspv rseb ntvd ttda',
-    MAIL_DEFAULT_SENDER='yaparla25@gmail.com'
-)
-
-mail = Mail(app)
 db = SQLAlchemy(app)
 
-# Models remain the same...
+# Configure Flask-Mail with Gmail SMTP - keeping your working configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'yaparla25@gmail.com'
+app.config['MAIL_PASSWORD'] = 'hspv rseb ntvd ttda'
+mail = Mail(app)
+
 class RegData(db.Model):
     __tablename__ = 'reg_data'
     payment_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    mobileno = db.Column(db.BigInteger, nullable=False)
+    mobileno = db.Column(db.BigInteger, nullable=False)  # Changed to BigInteger
     event = db.Column(db.String(100), nullable=False)
     college = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return f'<RegData {self.payment_id}>'
 
 class VisitorCount(db.Model):
     __tablename__ = 'visitor_count'
     id = db.Column(db.Integer, primary_key=True)
-    count = db.Column(db.BigInteger, default=0)
+    count = db.Column(db.BigInteger, default=0)  # Changed to BigInteger
+
+    @classmethod
+    def get_count(cls):
+        count_record = cls.query.first()
+        if count_record is None:
+            count_record = cls()
+            count_record.count = 0
+            db.session.add(count_record)
+            db.session.commit()
+        return count_record.count
 
     @classmethod
     def increment(cls):
@@ -76,13 +78,14 @@ class VisitorCount(db.Model):
             db.session.commit()
             return count_record.count
         except Exception as e:
-            logger.error(f"Error incrementing visitor count: {e}")
             db.session.rollback()
+            logger.error(f"Error incrementing visitor count: {e}")
             return 0
 
-# Razorpay configuration
+# Razorpay client configuration
 razorpay_client = razorpay.Client(auth=("rzp_test_Aq1j1l911IgPB7", "wS97NzUTtmye6nuTBeXo3Rmm"))
 
+# Fest events and their fees
 FEST_EVENTS = {
     "Project Expo": {"fee": 100},
     "Paper Presentation": {"fee": 50},
@@ -169,95 +172,69 @@ def registration():
 
 @app.route('/payment_callback', methods=['POST'])
 def payment_callback():
-    logger.info("Payment callback received")
     try:
+        # Get the payment data sent from Razorpay
         payment_data = request.get_json()
-        logger.info(f"Payment data: {payment_data}")
+        logger.debug(f"Payment data received: {payment_data}")
         
+        # Fetch registration data from the session
         registration_data = session.get('registration_data')
-        logger.info(f"Registration data from session: {registration_data}")
-        
         if not registration_data:
-            logger.error("No registration data in session")
-            return jsonify({'status': 'error', 'message': 'No registration data found'})
+            logger.error("Session expired or registration data not found.")
+            return jsonify({'status': 'error', 'message': 'Session expired or data missing.'})
 
-        # Verify payment
+        # Verify Razorpay payment signature
         try:
             razorpay_client.utility.verify_payment_signature({
                 'razorpay_payment_id': payment_data['razorpay_payment_id'],
                 'razorpay_order_id': payment_data['razorpay_order_id'],
                 'razorpay_signature': payment_data['razorpay_signature']
             })
-            logger.info("Payment verification successful")
+            logger.debug("Payment signature verified successfully.")
         except Exception as e:
-            logger.error(f"Payment verification failed: {str(e)}")
-            return jsonify({'status': 'error', 'message': 'Payment verification failed'})
+            logger.error(f"Payment signature verification failed: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Payment signature verification failed.'})
 
-        # Save to database
+        # Save the payment and registration details to the database
+        payment_id = payment_data['razorpay_payment_id']
+        new_registration = RegData(
+            payment_id=payment_id,
+            name=registration_data['fullname'],
+            email=registration_data['email'],
+            mobileno=int(registration_data['mobile']),
+            event=registration_data['event_name'],
+            college=registration_data['yourcollege']
+        )
+        db.session.add(new_registration)
+        db.session.commit()
+        logger.debug("Registration details saved to database.")
+
+        # Send a confirmation email
         try:
-            new_reg = RegData(
-                payment_id=payment_data['razorpay_payment_id'],
-                name=registration_data['fullname'],
-                email=registration_data['email'],
-                mobileno=int(registration_data['mobile']),
-                event=registration_data['event_name'],
-                college=registration_data['yourcollege']
-            )
-            logger.info(f"Attempting to save registration: {new_reg}")
-            db.session.add(new_reg)
-            db.session.commit()
-            logger.info("Registration saved successfully")
+            send_confirmation_email(app, registration_data, payment_id)
+            logger.debug("Confirmation email sent successfully.")
         except Exception as e:
-            logger.error(f"Database error: {str(e)}")
-            db.session.rollback()
-            return jsonify({'status': 'error', 'message': 'Database error'})
+            logger.error(f"Failed to send email: {str(e)}")
 
-        # Send email
-        try:
-            msg = Message(
-                'EYE 2K25 Registration Confirmation',
-                recipients=[registration_data['email']],
-                body=f"""
-Dear {registration_data['fullname']},
-
-Thank you for registering for EYE 2K25!
-
-Event: {registration_data['event_name']}
-Payment ID: {payment_data['razorpay_payment_id']}
-Amount: ₹{registration_data['event_fee']}
-
-Best regards,
-EYE 2K25 Team
-                """
-            )
-            mail.send(msg)
-            logger.info(f"Confirmation email sent to {registration_data['email']}")
-        except Exception as e:
-            logger.error(f"Email error: {str(e)}")
-            # Continue even if email fails
+        # Clear session data
+        session.pop('registration_data', None)
+        session.pop('razorpay_order_id', None)
 
         return jsonify({'status': 'success'})
 
     except Exception as e:
-        logger.error(f"General error in payment_callback: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e)})
+        logger.error(f"Payment callback error: {str(e)}")
+        return jsonify({'status': 'error', 'message': f'An error occurred: {str(e)}'})
 
-@app.route('/test_email')
-def test_email_route():
-    if test_email():
-        return "Test email sent successfully!"
-    return "Failed to send test email"
-
-
-def send_confirmation_email(registration_data, payment_id):
-    try:
-        msg = Message(
-            'EYE 2K25 Registration Confirmation',
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[registration_data['email']]
-        )
-        
-        msg.body = f"""
+def send_confirmation_email(app, registration_data, payment_id):
+    with app.app_context():
+        try:
+            msg = Message(
+                'EYE 2K25 Registration Confirmation',
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[registration_data['email']]
+            )
+            msg.body = f"""
 Dear {registration_data['fullname']},
 
 Thank you for registering for the EYE 2K25 Tech Fest! We're thrilled to have you join us for this exciting event.
@@ -277,21 +254,14 @@ Please save this email for your records. Your participation is confirmed, and we
 - Stay tuned for event updates and announcements via email or our official website.
 
 If you have any questions or require assistance, feel free to reach out.
-Thank you for being a part of EYE 2K25.
-Have a nice day!
+Thank you for being a part of EYE 2K25.\nHave a nice day !
 
-Best regards,
-The EYE 2K25 Team
+Best regards,  
+**The EYE 2K25 Team**    
 """
-        # Send email synchronously
-        with app.app_context():
             mail.send(msg)
-            logger.info(f"Confirmation email sent successfully to {registration_data['email']}")
-    except Exception as e:
-        logger.error(f"Failed to send confirmation email: {str(e)}")
-        raise
-
-
+        except Exception as e:
+            app.logger.error(f"Failed to send email: {str(e)}")
 @app.route('/pay_success')
 def payment_success():
     return render_template('pay_success.html')
@@ -311,21 +281,20 @@ def internal_server_error(e):
 if __name__ == '__main__':
     with app.app_context():
         try:
-            # Test database connection
             db.create_all()
             logger.info("Database tables created successfully")
-            
-            # Test email configuration
-            test_email()
-            
-            # Initialize visitor count if needed
+            tables = inspect(db.engine).get_table_names()
+            logger.info(f"Existing tables: {tables}")
+
+            # Initialize visitor count if not exists
             visitor = VisitorCount.query.first()
             if visitor is None:
                 initial_count = VisitorCount(count=0)
                 db.session.add(initial_count)
                 db.session.commit()
                 logger.info("Initialized visitor count to 0")
+
         except Exception as e:
-            logger.error(f"Startup error: {str(e)}")
+            logger.error(f"Error creating database tables: {str(e)}")
     
     app.run(debug=True)
