@@ -1,56 +1,88 @@
+/* pay_success.css */
 body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background: linear-gradient(135deg, #c071c7, #6c32ab, #426db7, #54b89d);
-    color: #fff;
-  }
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(135deg, #c071c7, #6c32ab, #426db7, #54b89d);
+  color: #fff;
+  padding: 15px;
+  box-sizing: border-box;
+}
 
+.container {
+  text-align: center;
+  padding: clamp(20px, 5vw, 30px);
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 95%;
+  max-width: 400px;
+}
+
+.icon {
+  font-size: clamp(40px, 8vw, 60px);
+  color: #4caf50;
+  margin-bottom: clamp(15px, 4vw, 20px);
+}
+
+h1 {
+  font-size: clamp(24px, 5vw, 28px);
+  color: #333;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+p {
+  margin-top: 10px;
+  color: #555;
+  font-size: clamp(14px, 3vw, 16px);
+  line-height: 1.5;
+}
+
+.button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: clamp(8px, 2vw, 10px) clamp(15px, 4vw, 20px);
+  font-size: clamp(14px, 3vw, 16px);
+  color: #fff;
+  background: #4caf50;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: fit-content;
+}
+
+.button:hover {
+  background: #43a047;
+}
+
+@media screen and (max-width: 480px) {
   .container {
-    text-align: center;
-    padding: 30px 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    width: 95%;
-    max-width: 400px;
+      padding: 15px;
   }
-
-  .icon {
-    font-size: 60px;
-    color: #4caf50;
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 10px;
-  }
-
-  p {
-    margin-top: 10px;
-    color: #555;
-    font-size: 16px;
-  }
-
+  
   .button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background: #4caf50;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
+      width: 100%;
   }
+}
 
-  .button:hover {
-    background: #43a047;
+@media screen and (max-width: 320px) {
+  body {
+      padding: 10px;
   }
+  
+  .container {
+      padding: 10px;
+  }
+}
+
+@media screen and (min-resolution: 192dpi) {
+  .container {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+}
