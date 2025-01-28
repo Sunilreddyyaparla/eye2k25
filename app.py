@@ -204,7 +204,7 @@ def payment_callback():
                 payment_id=payment_data['razorpay_payment_id'],
                 name=registration_data['fullname'],
                 email=registration_data['email'],
-                mobileno=int(request.form['mobile']),
+                mobileno=request.form['mobile'],
                 event=registration_data['event_name'],
                 college=registration_data['yourcollege']
             )
