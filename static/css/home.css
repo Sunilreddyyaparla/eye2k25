@@ -1,10 +1,13 @@
 /* Base styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    margin: 0;
-    padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-size: cover;
     background-position: center;
@@ -194,11 +197,12 @@ button:hover {
     padding: 8px 0;
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 100vw; /* Ensures full viewport width */
     z-index: 999;
     backdrop-filter: blur(5px);
     height: auto;
     min-height: 40px;
+    left: 0;
 }
 
 .footer-content {
@@ -212,7 +216,7 @@ button:hover {
     flex-wrap: wrap;
 }
 
-.footer-text, .developer-text {
+.footer-text, .developer-text, .visitor-counter {
     flex: 1 1 auto;
     text-align: center;
     font-size: clamp(11px, 2vw, 13px);
@@ -220,15 +224,6 @@ button:hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.visitor-counter {
-    flex: 0.6;
-    text-align: left;
-    padding: 2px 8px;
-    font-size: clamp(11px, 2vw, 13px);
-    color: white;
-    margin-right: auto;
 }
 
 /* Animation */
@@ -241,14 +236,15 @@ button:hover {
 }
 
 /* Media Queries */
+
+/* Extra Small Screens - Mobile */
 @media screen and (max-width: 576px) {
     .main-content {
-        margin-bottom: 80px; /* Increased to accommodate taller footer */
+        margin-bottom: 80px; /* Adjusted for taller footer */
     }
 
     .footer-container {
         padding: 8px 0;
-        height: auto;
     }
 
     .footer-content {
@@ -269,10 +265,10 @@ button:hover {
     }
 }
 
-/* Even smaller screens */
+/* Very Small Screens - Small Mobile */
 @media screen and (max-width: 375px) {
     .main-content {
-        margin-bottom: 90px; /* Further increased for smaller screens */
+        margin-bottom: 90px; /* Further adjustment */
     }
 
     .footer-container {
@@ -285,10 +281,10 @@ button:hover {
     }
 }
 
-/* Very small screens */
+/* Extremely Small Screens - Very Small Devices */
 @media screen and (max-width: 320px) {
     .main-content {
-        margin-bottom: 100px;
+        margin-bottom: 100px; /* Further adjustment for extra small screens */
     }
 
     .footer-text, .developer-text, .visitor-counter {
@@ -296,10 +292,10 @@ button:hover {
     }
 }
 
-/* Landscape mode adjustments */
+/* Landscape Mode Adjustments */
 @media screen and (max-height: 500px) and (orientation: landscape) {
     .footer-content {
-        flex-direction: row; /* Keep horizontal in landscape */
+        flex-direction: row; /* Keep horizontal in landscape mode */
         justify-content: space-between;
         padding: 0 10px;
     }
@@ -309,10 +305,13 @@ button:hover {
         white-space: nowrap;
     }
 }
+
+/* Devices with very small heights */
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
     }
+
     .sidenav a {
         font-size: 18px;
     }
