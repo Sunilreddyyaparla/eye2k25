@@ -43,7 +43,7 @@ class RegData(db.Model):
     payment_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    mobileno = db.Column(db.BigInteger, nullable=False)  # Changed to BigInteger
+    mobileno = db.Column(db.String, nullable=False)
     event = db.Column(db.String(100), nullable=False)
     college = db.Column(db.String(200), nullable=False)
 
