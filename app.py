@@ -101,10 +101,8 @@ def home():
         return render_template('home.html', visitor_count=visitor_count)
     except Exception as e:
         logger.error(f"Error in home route: {str(e)}")
-        # For HEAD requests, return a minimal response
-        if request.method == 'HEAD':
-            return '', 200
         return render_template('home.html', visitor_count=0)
+        
 @app.route('/events')
 def events():
     return render_template('events.html')
@@ -175,12 +173,14 @@ def payment_callback():
     try:
         # Get the payment data sent from Razorpay
         payment_data = request.get_json()
-        logger.debug(f"Payment data received: {payment_data}")
+        logger.info(f"Received payment_data: {payment_data}")
         
         # Fetch registration data from the session
         registration_data = session.get('registration_data')
+        logger.info(f"Retrieved registration_data from session: {registration_data}")
+        
         if not registration_data:
-            logger.error("Session expired or registration data not found.")
+            logger.error("No registration data found in session")
             return jsonify({'status': 'error', 'message': 'Session expired or data missing.'})
 
         # Verify Razorpay payment signature
@@ -190,42 +190,84 @@ def payment_callback():
                 'razorpay_order_id': payment_data['razorpay_order_id'],
                 'razorpay_signature': payment_data['razorpay_signature']
             })
-            logger.debug("Payment signature verified successfully.")
+            logger.info("Payment signature verified successfully")
         except Exception as e:
             logger.error(f"Payment signature verification failed: {str(e)}")
             return jsonify({'status': 'error', 'message': 'Payment signature verification failed.'})
 
-        # Save the payment and registration details to the database
-        payment_id = payment_data['razorpay_payment_id']
-        new_registration = RegData(
-            payment_id=payment_id,
-            name=registration_data['fullname'],
-            email=registration_data['email'],
-            mobileno=int(registration_data['mobile']),
-            event=registration_data['event_name'],
-            college=registration_data['yourcollege']
-        )
-        db.session.add(new_registration)
-        db.session.commit()
-        logger.debug("Registration details saved to database.")
-
-        # Send a confirmation email
+        # Log the data we're about to save
+        logger.info(f"Attempting to save registration with payment_id: {payment_data['razorpay_payment_id']}")
+        
         try:
-            send_confirmation_email(app, registration_data, payment_id)
-            logger.debug("Confirmation email sent successfully.")
+            # Create new registration record
+            new_registration = RegData(
+                payment_id=payment_data['razorpay_payment_id'],
+                name=registration_data['fullname'],
+                email=registration_data['email'],
+                mobileno=int(registration_data['mobile']),
+                event=registration_data['event_name'],
+                college=registration_data['yourcollege']
+            )
+            
+            # Log the registration object
+            logger.info(f"Created registration object: {vars(new_registration)}")
+            
+            # Add to session and commit
+            db.session.add(new_registration)
+            logger.info("Added registration to session")
+            
+            db.session.commit()
+            logger.info("Successfully committed registration to database")
+            
+            # Verify the data was saved
+            saved_reg = RegData.query.filter_by(payment_id=payment_data['razorpay_payment_id']).first()
+            if saved_reg:
+                logger.info(f"Verified saved registration: {vars(saved_reg)}")
+            else:
+                logger.error("Failed to retrieve saved registration")
+
+        except Exception as e:
+            logger.error(f"Database error while saving registration: {str(e)}")
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': f'Database error: {str(e)}'})
+
+        # Send confirmation email
+        try:
+            send_confirmation_email(app, registration_data, payment_data['razorpay_payment_id'])
+            logger.info("Confirmation email sent successfully")
         except Exception as e:
             logger.error(f"Failed to send email: {str(e)}")
 
         # Clear session data
         session.pop('registration_data', None)
         session.pop('razorpay_order_id', None)
+        logger.info("Cleared session data")
 
         return jsonify({'status': 'success'})
 
     except Exception as e:
-        logger.error(f"Payment callback error: {str(e)}")
-        return jsonify({'status': 'error', 'message': f'An error occurred: {str(e)}'})
+        logger.error(f"General error in payment_callback: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)})
 
+# Add a test route to check database connection
+@app.route('/test_db')
+def test_db():
+    try:
+        # Test RegData table
+        test_reg = RegData.query.first()
+        reg_count = RegData.query.count()
+        
+        # Test VisitorCount table
+        visitor_count = VisitorCount.query.first()
+        
+        return jsonify({
+            'status': 'success',
+            'registration_count': reg_count,
+            'visitor_count': visitor_count.count if visitor_count else 0,
+            'tables': inspect(db.engine).get_table_names()
+        })
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
 def send_confirmation_email(app, registration_data, payment_id):
     with app.app_context():
         try:
