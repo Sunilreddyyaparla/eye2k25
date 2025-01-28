@@ -238,7 +238,7 @@ h1 {
     
     .slideshow-container {
         width: 97%;
-        height:38vh;
+        height:37vh;
     }
     
     .gallery-header {
@@ -255,7 +255,7 @@ h1 {
     
     .slideshow-container {
         width: 97%;
-        height: 38vh;
+        height: 37vh;
     }
     
     .gallery-header {
@@ -276,7 +276,7 @@ h1 {
     
     .slideshow-container {
         width: 98%;
-        height: 37vh;
+        height: 35vh;
     }
     
     .gallery-header {
@@ -324,7 +324,7 @@ h1 {
 /* Very Small Screens - Small Mobile */
 @media screen and (max-width: 375px) {
     .slideshow-container {
-        height: 35vh;
+        height: 34vh;
     }
     
     .gallery-header {
@@ -348,7 +348,7 @@ h1 {
 /* Extra Small Devices */
 @media screen and (max-width: 320px) {
     .slideshow-container {
-        height: 30vh;
+        height: 29vh;
     }
     
     .main-content {
