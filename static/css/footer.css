@@ -1,12 +1,92 @@
-/* Footer Styles */
-footer {
-  text-align: center;
-  color: #fff;
-  padding: 10px; /* Reduced padding to decrease height */
+.footer-container {
+  background-color: rgba(0, 0, 0, 0.95);
+  padding: 8px 0;
   position: fixed;
   bottom: 0;
-  width: 100%; /* Ensures it spans the device width */
-  background-color: #1a1a1a; /* Updated solid background color */
-  font-size: 14px; /* Adjusted font size for better fit */
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow effect */
+  width: 100%;
+  z-index: 999;
+  backdrop-filter: blur(5px);
+  height: auto;
+  min-height: 40px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(10px, 3vw, 20px);
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.footer-text, .developer-text {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: clamp(11px, 2vw, 13px);
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* Extra Small Screens - Mobile */
+@media screen and (max-width: 576px) {
+  /* Footer adjustments */
+  .footer-container {
+      padding: 8px 0;
+      height: auto;
+  }
+
+  .footer-content {
+      flex-direction: column;
+      gap: 5px;
+      text-align: center;
+      padding: 0 5px;
+  }
+
+  .footer-text, .developer-text {
+      flex: 0 0 auto;
+      width: 100%;
+      text-align: center;
+      white-space: normal;
+      padding: 2px 0;
+      font-size: 11px;
+      margin: 0;
+  }
+}
+
+/* Very Small Screens - Small Mobile */
+@media screen and (max-width: 375px) {
+  
+  .footer-container {
+      padding: 6px 0;
+  }
+
+  .footer-text, .developer-text {
+      font-size: 10px;
+      padding: 2px 0;
+  }
+}
+/* Extra Small Devices */
+@media screen and (max-width: 320px) {
+
+  .footer-text, .developer-text {
+      line-height: 1.3;
+  }
+}
+/* Landscape Mode */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .footer-content {
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 10px;
+  }
+
+  .footer-text, .developer-text {
+      width: auto;
+      white-space: nowrap;
+  }
 }
