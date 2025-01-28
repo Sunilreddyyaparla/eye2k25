@@ -228,11 +228,11 @@ button:hover {
 
 /* Animation */
 @keyframes colorGlow {
-    0% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
-    25% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); }
-    50% { box-shadow: 0 0 20px rgba(0, 0, 255, 0.5); }
-    75% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.5); }
-    100% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
+    0% { box-shadow: 0 0 60px rgba(5, 248, 5, 0.9); }    
+    25% { box-shadow: 0 0 60px rgba(241, 5, 5, 0.9); } 
+    50% { box-shadow: 0 0 60px rgba(4, 238, 247, 0.9); }   
+    75% { box-shadow: 0 0 60px rgba(240, 5, 161, 0.9); }     
+    100% { box-shadow: 0 0 60px rgba(204, 240, 3, 0.9); }    
 }
 
 /* Media Queries */
