@@ -43,7 +43,7 @@ class RegData(db.Model):
     payment_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    mobileno = db.Column(db.String, nullable=False)
+    mobileno = db.Column(db.BigInteger, nullable=False)
     event = db.Column(db.String(100), nullable=False)
     college = db.Column(db.String(200), nullable=False)
 
@@ -204,7 +204,7 @@ def payment_callback():
                 payment_id=payment_data['razorpay_payment_id'],
                 name=registration_data['fullname'],
                 email=registration_data['email'],
-                mobileno=registration_data['mobile'],
+                mobileno=int(request.form['mobile']),
                 event=registration_data['event_name'],
                 college=registration_data['yourcollege']
             )
@@ -249,25 +249,6 @@ def payment_callback():
         logger.error(f"General error in payment_callback: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)})
 
-# Add a test route to check database connection
-@app.route('/test_db')
-def test_db():
-    try:
-        # Test RegData table
-        test_reg = RegData.query.first()
-        reg_count = RegData.query.count()
-        
-        # Test VisitorCount table
-        visitor_count = VisitorCount.query.first()
-        
-        return jsonify({
-            'status': 'success',
-            'registration_count': reg_count,
-            'visitor_count': visitor_count.count if visitor_count else 0,
-            'tables': inspect(db.engine).get_table_names()
-        })
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
 def send_confirmation_email(app, registration_data, payment_id):
     with app.app_context():
         try:
