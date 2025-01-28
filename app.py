@@ -130,33 +130,23 @@ def terms_and_conditions():
 def registration():
     if request.method == 'POST':
         try:
-            fullname = request.form['fullname']
-            email = request.form['email']
-            mobile = request.form['mobile']
-            yourcollege = request.form['yourcollege']
-            event_name = request.form['event']
+            registration_data = {
+                'fullname': request.form['fullname'],
+                'email': request.form['email'],
+                'mobile': request.form['mobile'],
+                'yourcollege': request.form['yourcollege'],
+                'event_name': request.form['event'],
+            }
 
-            # Validate mobile number
-            if not mobile.isdigit() or len(mobile) < 10 or len(mobile) > 15:
-                flash("Invalid mobile number. It must be between 10 and 15 digits.", "error")
-                return redirect(url_for('registration'))
-
-            if event_name not in FEST_EVENTS:
+            if registration_data['event_name'] not in FEST_EVENTS:
                 flash("Invalid event selected.", "error")
                 return redirect(url_for('registration'))
 
-            event_fee = FEST_EVENTS[event_name]['fee']
-            session['registration_data'] = {
-                'fullname': fullname,
-                'email': email,
-                'mobile': mobile,
-                'yourcollege': yourcollege,
-                'event_name': event_name,
-                'event_fee': event_fee,
-            }
+            registration_data['event_fee'] = FEST_EVENTS[registration_data['event_name']]['fee']
+            session['registration_data'] = registration_data
 
             order_data = {
-                'amount': event_fee * 100,
+                'amount': registration_data['event_fee'] * 100,
                 'currency': 'INR',
                 'receipt': f"order_rcpt_{random.randint(1000, 9999)}",
                 'payment_capture': 1
@@ -167,7 +157,7 @@ def registration():
             return render_template(
                 'razorpay_payment.html',
                 order_id=order['id'],
-                registration_data=session['registration_data'],
+                registration_data=registration_data,
                 razorpay_key="rzp_test_Aq1j1l911IgPB7"
             )
         except Exception as e:
@@ -176,7 +166,6 @@ def registration():
             return redirect(url_for('registration'))
 
     return render_template('registration.html', festevents=FEST_EVENTS)
-
 @app.route('/payment_callback', methods=['POST'])
 def payment_callback():
     try:
