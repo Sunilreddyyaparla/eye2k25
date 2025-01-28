@@ -169,18 +169,27 @@ def registration():
 @app.route('/payment_callback', methods=['POST'])
 def payment_callback():
     try:
+        # Get the payment data sent from Razorpay
         payment_data = request.get_json()
+        logger.info(f"Received payment_data: {payment_data}")
+
+        # Fetch registration data from the session
         registration_data = session.get('registration_data')
+        logger.info(f"Retrieved registration_data from session: {registration_data}")
 
         if not registration_data:
+            logger.error("No registration data found in session")
             return jsonify({'status': 'error', 'message': 'Session expired or data missing.'})
 
+        # Verify Razorpay payment signature
         razorpay_client.utility.verify_payment_signature({
             'razorpay_payment_id': payment_data['razorpay_payment_id'],
             'razorpay_order_id': payment_data['razorpay_order_id'],
             'razorpay_signature': payment_data['razorpay_signature']
         })
+        logger.info("Payment signature verified successfully")
 
+        # Create new registration record
         new_registration = RegData(
             payment_id=payment_data['razorpay_payment_id'],
             name=registration_data['fullname'],
@@ -189,14 +198,28 @@ def payment_callback():
             event=registration_data['event_name'],
             college=registration_data['yourcollege']
         )
+
+        # Add registration to the database
         db.session.add(new_registration)
         db.session.commit()
+        logger.info(f"Registration saved to the database with payment_id: {payment_data['razorpay_payment_id']}")
 
+        # Send confirmation email after successful registration
+        try:
+            send_confirmation_email(app, registration_data, payment_data['razorpay_payment_id'])
+            logger.info("Confirmation email sent successfully")
+        except Exception as e:
+            logger.error(f"Failed to send email: {str(e)}")
+
+        # Clear session data after processing
         session.pop('registration_data', None)
         session.pop('razorpay_order_id', None)
+        logger.info("Cleared session data")
+
         return jsonify({'status': 'success'})
+
     except Exception as e:
-        logger.error(f"Error in payment_callback: {e}")
+        logger.error(f"Error in payment_callback: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)})
 
 
