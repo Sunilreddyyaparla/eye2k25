@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import os
+import psycopg2
+from psycopg2.extras import DictCursor
 from flask_mail import Mail, Message
 import random
 import razorpay
 import threading
-from flask_sqlalchemy import SQLAlchemy
-import logging 
-from sqlalchemy import inspect
+import logging
+from urllib.parse import urlparse
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -16,66 +17,68 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Database Configuration
-if os.environ.get('DATABASE_URL'):
-    # Use PostgreSQL database URL from environment variable (for production)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-    logger.info(f"Connecting to database: {os.environ.get('DATABASE_URL')}")
-else:
-    # Use SQLite for local development
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    db_path = os.path.join(basedir, 'eye2k25_reg.db')
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-    logger.info(f"Using SQLite database at: {db_path}")
+DATABASE_URL = "postgresql://eye2k25_user:S4haUy7pTIEGbGCHDWt5cINm70ZvykVY@dpg-cu9pvolumphs73cfl9f0-a.oregon-postgres.render.com/eye2k25"
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
+def get_db_connection():
+    try:
+        conn = psycopg2.connect(
+            DATABASE_URL,
+            sslmode='require'  # Enable SSL mode for secure connection
+        )
+        return conn
+    except Exception as e:
+        logger.error(f"Database connection error: {str(e)}")
+        raise
 
-db = SQLAlchemy(app)
-
-# The rest of your models should remain exactly the same
-class RegData(db.Model):
-    __tablename__ = 'reg_data'
-    payment_id = db.Column(db.String(100), primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    mobileno = db.Column(db.Integer, nullable=False)
-    event = db.Column(db.String(100), nullable=False)
-    college = db.Column(db.String(200), nullable=False)
-
-    def __repr__(self):
-        return f'<RegData {self.payment_id}>'
-
-class VisitorCount(db.Model):
-    __tablename__ = 'visitor_count'
-    id = db.Column(db.Integer, primary_key=True)
-    count = db.Column(db.Integer, default=0)
-
-    @classmethod
-    def get_count(cls):
-        count_record = cls.query.first()
-        if count_record is None:
-            count_record = cls()
-            count_record.count = 0
-            db.session.add(count_record)
-            db.session.commit()
-        return count_record.count
-
-    @classmethod
-    def increment(cls):
+# Initialize Database with error handling and connection timeout
+def init_db():
+    retries = 3
+    for attempt in range(retries):
         try:
-            with db.session.begin_nested():
-                count_record = cls.query.with_for_update().first()
-                if count_record is None:
-                    count_record = cls(count=1)
-                    db.session.add(count_record)
-                else:
-                    count_record.count += 1
-            db.session.commit()
-            return count_record.count
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f"Error incrementing visitor count: {e}")
-            return 0
+            conn = get_db_connection()
+            conn.set_session(autocommit=False)  # Explicit transaction control
+            cur = conn.cursor()
+            
+            # Create registration table
+            cur.execute('''
+                CREATE TABLE IF NOT EXISTS reg_data (
+                    payment_id VARCHAR(100) PRIMARY KEY,
+                    name VARCHAR(100) NOT NULL,
+                    email VARCHAR(100) NOT NULL,
+                    mobileno BIGINT NOT NULL,
+                    event VARCHAR(100) NOT NULL,
+                    college VARCHAR(200) NOT NULL
+                );
+            ''')
+            
+            # Create visitor count table
+            cur.execute('''
+                CREATE TABLE IF NOT EXISTS visitor_count (
+                    id SERIAL PRIMARY KEY,
+                    count INTEGER DEFAULT 0
+                );
+            ''')
+            
+            # Initialize visitor count if not exists
+            cur.execute('SELECT count FROM visitor_count LIMIT 1;')
+            if cur.fetchone() is None:
+                cur.execute('INSERT INTO visitor_count (count) VALUES (0);')
+            
+            conn.commit()
+            logger.info("Database initialized successfully")
+            return True
+            
+        except psycopg2.Error as e:
+            logger.error(f"Database initialization attempt {attempt + 1} failed: {str(e)}")
+            if conn:
+                conn.rollback()
+            if attempt == retries - 1:
+                raise
+        finally:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
 
 # Razorpay client configuration
 razorpay_client = razorpay.Client(auth=("rzp_test_Aq1j1l911IgPB7", "wS97NzUTtmye6nuTBeXo3Rmm"))
@@ -98,40 +101,36 @@ FEST_EVENTS = {
     "Circuit Hunt": {"fee": 25},
 }
 
+def increment_visitor_count():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute('''
+            UPDATE visitor_count 
+            SET count = count + 1 
+            RETURNING count;
+        ''')
+        new_count = cur.fetchone()[0]
+        conn.commit()
+        return new_count
+    except Exception as e:
+        conn.rollback()
+        logger.error(f"Error incrementing visitor count: {e}")
+        return 0
+    finally:
+        cur.close()
+        conn.close()
+
 @app.route('/', methods=['GET', 'HEAD'])
 def home():
     try:
-        visitor_count = VisitorCount.increment()
+        visitor_count = increment_visitor_count()
         return render_template('home.html', visitor_count=visitor_count)
     except Exception as e:
         logger.error(f"Error in home route: {str(e)}")
-        # For HEAD requests, return a minimal response
         if request.method == 'HEAD':
             return '', 200
         return render_template('home.html', visitor_count=0)
-@app.route('/events')
-def events():
-    return render_template('events.html')
-
-@app.route('/gallery')
-def gallery():
-    return render_template('gallery.html')
-
-@app.route('/portfolio')
-def portfolio():
-    return render_template('portfolio.html')
-
-@app.route('/aboutus')
-def aboutus():
-    return render_template('aboutus.html')
-
-@app.route('/contactus')
-def contactus():
-    return render_template('contactus.html')
-
-@app.route('/terms_and_conditions')
-def terms_and_conditions():
-    return render_template('terms_and_conditions.html')
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
@@ -168,7 +167,7 @@ def registration():
                 razorpay_key="rzp_test_Aq1j1l911IgPB7"
             )
         except Exception as e:
-            app.logger.error(f"Registration error: {str(e)}")
+            logger.error(f"Registration error: {str(e)}")
             flash("An error occurred during registration. Please try again.", "error")
             return redirect(url_for('registration'))
 
@@ -177,11 +176,9 @@ def registration():
 @app.route('/payment_callback', methods=['POST'])
 def payment_callback():
     try:
-        # Get the payment data sent from Razorpay
         payment_data = request.get_json()
         logger.debug(f"Payment data received: {payment_data}")
         
-        # Fetch registration data from the session
         registration_data = session.get('registration_data')
         if not registration_data:
             logger.error("Session expired or registration data not found.")
@@ -199,23 +196,34 @@ def payment_callback():
             logger.error(f"Payment signature verification failed: {str(e)}")
             return jsonify({'status': 'error', 'message': 'Payment signature verification failed.'})
 
-        # Save the payment and registration details to the database
-        payment_id = payment_data['razorpay_payment_id']
-        new_registration = RegData(
-            payment_id=payment_id,
-            name=registration_data['fullname'],
-            email=registration_data['email'],
-            mobileno=int(registration_data['mobile']),
-            event=registration_data['event_name'],
-            college=registration_data['yourcollege']
-        )
-        db.session.add(new_registration)
-        db.session.commit()
-        logger.debug("Registration details saved to database.")
-
-        # Send a confirmation email
+        # Save registration details to database
+        conn = get_db_connection()
+        cur = conn.cursor()
         try:
-            send_confirmation_email(app, registration_data, payment_id)
+            cur.execute('''
+                INSERT INTO reg_data (payment_id, name, email, mobileno, event, college)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            ''', (
+                payment_data['razorpay_payment_id'],
+                registration_data['fullname'],
+                registration_data['email'],
+                int(registration_data['mobile']),
+                registration_data['event_name'],
+                registration_data['yourcollege']
+            ))
+            conn.commit()
+            logger.debug("Registration details saved to database.")
+        except Exception as e:
+            conn.rollback()
+            logger.error(f"Database error: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Database error occurred.'})
+        finally:
+            cur.close()
+            conn.close()
+
+        # Send confirmation email
+        try:
+            send_confirmation_email(app, registration_data, payment_data['razorpay_payment_id'])
             logger.debug("Confirmation email sent successfully.")
         except Exception as e:
             logger.error(f"Failed to send email: {str(e)}")
@@ -267,6 +275,31 @@ Best regards,
         except Exception as e:
             app.logger.error(f"Failed to send email: {str(e)}")
 
+# Other routes remain the same
+@app.route('/events')
+def events():
+    return render_template('events.html')
+
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
+@app.route('/portfolio')
+def portfolio():
+    return render_template('portfolio.html')
+
+@app.route('/aboutus')
+def aboutus():
+    return render_template('aboutus.html')
+
+@app.route('/contactus')
+def contactus():
+    return render_template('contactus.html')
+
+@app.route('/terms_and_conditions')
+def terms_and_conditions():
+    return render_template('terms_and_conditions.html')
+
 @app.route('/pay_success')
 def payment_success():
     return render_template('pay_success.html')
@@ -284,22 +317,5 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    with app.app_context():
-        try:
-            db.create_all()
-            logger.info("Database tables created successfully")
-            tables = inspect(db.engine).get_table_names()
-            logger.info(f"Existing tables: {tables}")
-
-            # Initialize visitor count if not exists
-            visitor = VisitorCount.query.first()
-            if visitor is None:
-                initial_count = VisitorCount(count=0)
-                db.session.add(initial_count)
-                db.session.commit()
-                logger.info("Initialized visitor count to 0")
-
-        except Exception as e:
-            logger.error(f"Error creating database tables: {str(e)}")
-    
+    init_db()
     app.run(debug=True)
