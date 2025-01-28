@@ -224,7 +224,7 @@ h1 {
     }
     
     .slideshow-container {
-        width: 85%;
+        width: 90%;
         height: 65vh;
     }
 }
@@ -237,8 +237,8 @@ h1 {
     }
     
     .slideshow-container {
-        width: 90%;
-        height: 55vh;
+        width: 97%;
+        height:38vh;
     }
     
     .gallery-header {
@@ -254,8 +254,8 @@ h1 {
     }
     
     .slideshow-container {
-        width: 95%;
-        height: 45vh;
+        width: 97%;
+        height: 38vh;
     }
     
     .gallery-header {
@@ -276,7 +276,7 @@ h1 {
     
     .slideshow-container {
         width: 98%;
-        height: 40vh;
+        height: 37vh;
     }
     
     .gallery-header {
