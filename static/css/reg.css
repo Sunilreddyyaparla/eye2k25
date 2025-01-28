@@ -1,50 +1,131 @@
+/* reg.css */
 body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #c5dff1;
-  }
-  
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #c5dff1;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: clamp(20px, 5vw, 30px);
+  background-color: #f4f4f4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
   .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      min-height: 100vh;
+      margin: 0;
+      border-radius: 0;
   }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: clamp(28px, 6vw, 32px);
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: clamp(16px, 4vw, 18px);
+  color: #444;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+select:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  margin: 30px auto 0;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error {
+  color: #e74c3c;
+  margin-bottom: 16px;
+  font-size: 16px;
+  padding: 12px;
+  background-color: #fde8e8;
+  border-radius: 6px;
+  border-left: 4px solid #e74c3c;
+}
+
+/* Enhanced Mobile Styles */
+@media screen and (max-width: 480px) {
+  .container {
+      padding: 20px;
   }
   
   input[type="text"],
   input[type="email"],
   input[type="tel"],
   select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+      padding: 18px;
+      font-size: 18px;
+      margin-bottom: 20px;
+  }
+  
+  label {
+      margin-bottom: 10px;
+      font-size: 18px;
   }
   
   button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+      padding: 18px;
+      font-size: 20px;
+      margin-top: 24px;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 320px) {
+  .container {
+      padding: 16px;
   }
   
-  .error {
-    color: red;
-    margin-bottom: 10px;
+  h1 {
+      font-size: 24px;
   }
+}
