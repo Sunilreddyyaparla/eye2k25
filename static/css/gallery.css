@@ -174,3 +174,15 @@ footer {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
+/* Mobile-specific styles */
+@media screen and (max-width: 480px) {
+    .slideshow-container {
+        height: 40vh; /* Adjust height for mobile */
+    }
+
+    .slide {
+        object-fit: cover; /* Ensures the image fills the container */
+        height: 100%; /* Ensure the image covers the full container height */
+        width: 100%; /* Ensure the image covers the full container width */
+    }
+}
