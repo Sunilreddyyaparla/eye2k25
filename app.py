@@ -15,13 +15,20 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-# PostgreSQL Configuration
-DATABASE_URL = "postgresql://eye2k25_user:S4haUy7pTIEGbGCHDWt5cINm70ZvykVY@dpg-cu9pvolumphs73cfl9f0-a.oregon-postgres.render.com/eye2k25"
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+# Database Configuration
+if os.environ.get('DATABASE_URL'):
+    # Use PostgreSQL database URL from environment variable (for production)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    logger.info(f"Connecting to database: {os.environ.get('DATABASE_URL')}")
+else:
+    # Use SQLite for local development
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    db_path = os.path.join(basedir, 'eye2k25_reg.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    logger.info(f"Using SQLite database at: {db_path}")
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-
-logger.info(f"Connecting to database: {DATABASE_URL.split('@')[1]}")  # Log only the host part, not credentials
 
 db = SQLAlchemy(app)
 
@@ -278,11 +285,6 @@ def internal_server_error(e):
 
 if __name__ == '__main__':
     with app.app_context():
-        if not os.path.exists(db_path):
-            logger.info("Database does not exist. Creating new database...")
-        else:
-            logger.info("Database already exists")
-        
         try:
             db.create_all()
             logger.info("Database tables created successfully")
