@@ -353,6 +353,66 @@ th {
     flex-direction: column;
     align-items: center;
 }
+/* Make the tables scrollable */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* For smoother scrolling on mobile */
+}
+
+table {
+    width: 100%;
+    min-width: 600px; /* Ensure table is wide enough for mobile */
+    border-collapse: collapse;
+}
+
+/* Adjust padding and font size for better mobile readability */
+th, td {
+    padding: 12px;
+    text-align: left;
+    font-size: 0.9rem; /* Adjust font size for mobile */
+}
+
+/* Add hover effect for rows */
+tr:hover {
+    background-color: #f1f1f1;
+}
+/* Slide-in effect for the sections */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.content-section.active {
+    display: block;
+    animation: slideIn 0.5s ease-out;
+}
+@media (max-width: 768px) {
+    .table-container {
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        padding: 10px;
+    }
+
+    table {
+        min-width: 500px; /* Slightly smaller for smaller devices */
+    }
+
+    th, td {
+        font-size: 0.85rem; /* Make text smaller for better readability */
+    }
+
+    .content-area {
+        padding: 10px; /* Reduce padding for mobile screens */
+    }
+}
+
 @media (max-width: 768px) {
     #eye2k25 .image-container {
         width: 90%; /* Adjust width for smaller devices */
