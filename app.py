@@ -169,124 +169,73 @@ def registration():
 @app.route('/payment_callback', methods=['POST'])
 def payment_callback():
     try:
-        # Get the payment data sent from Razorpay
         payment_data = request.get_json()
-        logger.info(f"Received payment_data: {payment_data}")
-        
-        # Fetch registration data from the session
         registration_data = session.get('registration_data')
-        logger.info(f"Retrieved registration_data from session: {registration_data}")
-        
+
         if not registration_data:
-            logger.error("No registration data found in session")
             return jsonify({'status': 'error', 'message': 'Session expired or data missing.'})
 
-        # Verify Razorpay payment signature
-        try:
-            razorpay_client.utility.verify_payment_signature({
-                'razorpay_payment_id': payment_data['razorpay_payment_id'],
-                'razorpay_order_id': payment_data['razorpay_order_id'],
-                'razorpay_signature': payment_data['razorpay_signature']
-            })
-            logger.info("Payment signature verified successfully")
-        except Exception as e:
-            logger.error(f"Payment signature verification failed: {str(e)}")
-            return jsonify({'status': 'error', 'message': 'Payment signature verification failed.'})
+        razorpay_client.utility.verify_payment_signature({
+            'razorpay_payment_id': payment_data['razorpay_payment_id'],
+            'razorpay_order_id': payment_data['razorpay_order_id'],
+            'razorpay_signature': payment_data['razorpay_signature']
+        })
 
-        # Log the data we're about to save
-        logger.info(f"Attempting to save registration with payment_id: {payment_data['razorpay_payment_id']}")
+        new_registration = RegData(
+            payment_id=payment_data['razorpay_payment_id'],
+            name=registration_data['fullname'],
+            email=registration_data['email'],
+            mobileno=registration_data['mobile'],
+            event=registration_data['event_name'],
+            college=registration_data['yourcollege']
+        )
+        db.session.add(new_registration)
+        db.session.commit()
 
-        try:
-            # Create new registration record
-            new_registration = RegData(
-                payment_id=payment_data['razorpay_payment_id'],
-                name=registration_data['fullname'],
-                email=registration_data['email'],
-                mobileno=request.form['mobile'],
-                event=registration_data['event_name'],
-                college=registration_data['yourcollege']
-            )
-            
-            # Log the registration object
-            logger.info(f"Created registration object: {vars(new_registration)}")
-            
-            # Add to session and commit
-            db.session.add(new_registration)
-            logger.info("Added registration to session")
-            
-            db.session.commit()
-            logger.info("Successfully committed registration to database")
-            
-            # Verify the data was saved
-            saved_reg = RegData.query.filter_by(payment_id=payment_data['razorpay_payment_id']).first()
-            if saved_reg:
-                logger.info(f"Verified saved registration: {vars(saved_reg)}")
-            else:
-                logger.error("Failed to retrieve saved registration")
-
-        except Exception as e:
-            logger.error(f"Database error while saving registration: {str(e)}")
-            db.session.rollback()
-            return jsonify({'status': 'error', 'message': f'Database error: {str(e)}'})
-
-        # Send confirmation email
-        try:
-            # Construct and send the confirmation email
-            send_confirmation_email(app, registration_data, payment_data['razorpay_payment_id'])
-            logger.info("Confirmation email sent successfully")
-        except Exception as e:
-            logger.error(f"Failed to send email: {str(e)}")
-
-        # Clear session data
         session.pop('registration_data', None)
         session.pop('razorpay_order_id', None)
-        logger.info("Cleared session data")
-
         return jsonify({'status': 'success'})
-
     except Exception as e:
-        logger.error(f"General error in payment_callback: {str(e)}")
+        logger.error(f"Error in payment_callback: {e}")
         return jsonify({'status': 'error', 'message': str(e)})
 
 
 def send_confirmation_email(app, registration_data, payment_id):
-    """ Send confirmation email after successful registration and payment. """
-    try:
-        with app.app_context():
+    with app.app_context():
+        try:
             msg = Message(
                 'EYE 2K25 Registration Confirmation',
                 sender=app.config['MAIL_USERNAME'],
                 recipients=[registration_data['email']]
             )
             msg.body = f"""
-            Dear {registration_data['fullname']},
+Dear {registration_data['fullname']},
 
-            Thank you for registering for the EYE 2K25 Tech Fest! We're thrilled to have you join us for this exciting event.
+Thank you for registering for the EYE 2K25 Tech Fest! We're thrilled to have you join us for this exciting event.
 
-            Here are your registration details:
-            --------------------------------------------------
-            🎉 Event: {registration_data['event_name']}
-            💰 Amount Paid: ₹{registration_data['event_fee']}
-            🆔 Payment ID: {payment_id}
-            🏫 College: {registration_data['yourcollege']}
-            --------------------------------------------------
+Here are your registration details:
+--------------------------------------------------
+🎉 Event: {registration_data['event_name']}
+💰 Amount Paid: ₹{registration_data['event_fee']}
+🆔 Payment ID: {payment_id}
+🏫 College: {registration_data['yourcollege']}
+--------------------------------------------------
 
-            Please save this email for your records. Your participation is confirmed, and we can't wait to welcome you to EYE 2K25. Be ready for a fantastic experience filled with learning, networking, and fun!
+Please save this email for your records. Your participation is confirmed, and we can't wait to welcome you to EYE 2K25. Be ready for a fantastic experience filled with learning, networking, and fun!
 
-            **Important Information:**
-            - Make sure to bring a valid ID for verification at the event.
-            - Stay tuned for event updates and announcements via email or our official website.
+**Important Information:**
+- Make sure to bring a valid ID for verification at the event.
+- Stay tuned for event updates and announcements via email or our official website.
 
-            If you have any questions or require assistance, feel free to reach out.
-            Thank you for being a part of EYE 2K25.\nHave a nice day !
+If you have any questions or require assistance, feel free to reach out.
+Thank you for being a part of EYE 2K25.\nHave a nice day !
 
-            Best regards,  
-            **The EYE 2K25 Team**
-            """
+Best regards,  
+**The EYE 2K25 Team**    
+"""
             mail.send(msg)
-            app.logger.info(f"Confirmation email sent to {registration_data['email']}")
-    except Exception as e:
-        app.logger.error(f"Failed to send confirmation email: {str(e)}")
+        except Exception as e:
+            app.logger.error(f"Failed to send email: {str(e)}")
 
 @app.route('/pay_success')
 def payment_success():
