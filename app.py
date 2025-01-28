@@ -29,7 +29,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
 
-# Configure Flask-Mail with Gmail SMTP - keeping your working configuration
+# Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -43,7 +43,7 @@ class RegData(db.Model):
     payment_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    mobileno = db.Column(db.BigInteger, nullable=False)
+    mobileno = db.Column(db.String(15), nullable=False)  # Changed to match VARCHAR(15)
     event = db.Column(db.String(100), nullable=False)
     college = db.Column(db.String(200), nullable=False)
 
@@ -53,7 +53,7 @@ class RegData(db.Model):
 class VisitorCount(db.Model):
     __tablename__ = 'visitor_count'
     id = db.Column(db.Integer, primary_key=True)
-    count = db.Column(db.BigInteger, default=0)  # Changed to BigInteger
+    count = db.Column(db.BigInteger, default=0)
 
     @classmethod
     def get_count(cls):
@@ -85,7 +85,6 @@ class VisitorCount(db.Model):
 # Razorpay client configuration
 razorpay_client = razorpay.Client(auth=("rzp_test_Aq1j1l911IgPB7", "wS97NzUTtmye6nuTBeXo3Rmm"))
 
-# Fest events and their fees
 FEST_EVENTS = {
     "Project Expo": {"fee": 100},
     "Paper Presentation": {"fee": 50},
@@ -131,23 +130,33 @@ def terms_and_conditions():
 def registration():
     if request.method == 'POST':
         try:
-            registration_data = {
-                'fullname': request.form['fullname'],
-                'email': request.form['email'],
-                'mobile': request.form['mobile'],
-                'yourcollege': request.form['yourcollege'],
-                'event_name': request.form['event'],
-            }
+            fullname = request.form['fullname']
+            email = request.form['email']
+            mobile = request.form['mobile']
+            yourcollege = request.form['yourcollege']
+            event_name = request.form['event']
 
-            if registration_data['event_name'] not in FEST_EVENTS:
+            # Validate mobile number
+            if not mobile.isdigit() or len(mobile) < 10 or len(mobile) > 15:
+                flash("Invalid mobile number. It must be between 10 and 15 digits.", "error")
+                return redirect(url_for('registration'))
+
+            if event_name not in FEST_EVENTS:
                 flash("Invalid event selected.", "error")
                 return redirect(url_for('registration'))
 
-            registration_data['event_fee'] = FEST_EVENTS[registration_data['event_name']]['fee']
-            session['registration_data'] = registration_data
+            event_fee = FEST_EVENTS[event_name]['fee']
+            session['registration_data'] = {
+                'fullname': fullname,
+                'email': email,
+                'mobile': mobile,
+                'yourcollege': yourcollege,
+                'event_name': event_name,
+                'event_fee': event_fee,
+            }
 
             order_data = {
-                'amount': registration_data['event_fee'] * 100,
+                'amount': event_fee * 100,
                 'currency': 'INR',
                 'receipt': f"order_rcpt_{random.randint(1000, 9999)}",
                 'payment_capture': 1
@@ -158,7 +167,7 @@ def registration():
             return render_template(
                 'razorpay_payment.html',
                 order_id=order['id'],
-                registration_data=registration_data,
+                registration_data=session['registration_data'],
                 razorpay_key="rzp_test_Aq1j1l911IgPB7"
             )
         except Exception as e:
@@ -171,83 +180,36 @@ def registration():
 @app.route('/payment_callback', methods=['POST'])
 def payment_callback():
     try:
-        # Get the payment data sent from Razorpay
         payment_data = request.get_json()
-        logger.info(f"Received payment_data: {payment_data}")
-        
-        # Fetch registration data from the session
         registration_data = session.get('registration_data')
-        logger.info(f"Retrieved registration_data from session: {registration_data}")
-        
+
         if not registration_data:
-            logger.error("No registration data found in session")
             return jsonify({'status': 'error', 'message': 'Session expired or data missing.'})
 
-        # Verify Razorpay payment signature
-        try:
-            razorpay_client.utility.verify_payment_signature({
-                'razorpay_payment_id': payment_data['razorpay_payment_id'],
-                'razorpay_order_id': payment_data['razorpay_order_id'],
-                'razorpay_signature': payment_data['razorpay_signature']
-            })
-            logger.info("Payment signature verified successfully")
-        except Exception as e:
-            logger.error(f"Payment signature verification failed: {str(e)}")
-            return jsonify({'status': 'error', 'message': 'Payment signature verification failed.'})
+        razorpay_client.utility.verify_payment_signature({
+            'razorpay_payment_id': payment_data['razorpay_payment_id'],
+            'razorpay_order_id': payment_data['razorpay_order_id'],
+            'razorpay_signature': payment_data['razorpay_signature']
+        })
 
-        # Log the data we're about to save
-        logger.info(f"Attempting to save registration with payment_id: {payment_data['razorpay_payment_id']}")
-        
-        try:
-            # Create new registration record
-            new_registration = RegData(
-                payment_id=payment_data['razorpay_payment_id'],
-                name=registration_data['fullname'],
-                email=registration_data['email'],
-                mobileno=request.form['mobile'],
-                event=registration_data['event_name'],
-                college=registration_data['yourcollege']
-            )
-            
-            # Log the registration object
-            logger.info(f"Created registration object: {vars(new_registration)}")
-            
-            # Add to session and commit
-            db.session.add(new_registration)
-            logger.info("Added registration to session")
-            
-            db.session.commit()
-            logger.info("Successfully committed registration to database")
-            
-            # Verify the data was saved
-            saved_reg = RegData.query.filter_by(payment_id=payment_data['razorpay_payment_id']).first()
-            if saved_reg:
-                logger.info(f"Verified saved registration: {vars(saved_reg)}")
-            else:
-                logger.error("Failed to retrieve saved registration")
+        new_registration = RegData(
+            payment_id=payment_data['razorpay_payment_id'],
+            name=registration_data['fullname'],
+            email=registration_data['email'],
+            mobileno=registration_data['mobile'],
+            event=registration_data['event_name'],
+            college=registration_data['yourcollege']
+        )
+        db.session.add(new_registration)
+        db.session.commit()
 
-        except Exception as e:
-            logger.error(f"Database error while saving registration: {str(e)}")
-            db.session.rollback()
-            return jsonify({'status': 'error', 'message': f'Database error: {str(e)}'})
-
-        # Send confirmation email
-        try:
-            send_confirmation_email(app, registration_data, payment_data['razorpay_payment_id'])
-            logger.info("Confirmation email sent successfully")
-        except Exception as e:
-            logger.error(f"Failed to send email: {str(e)}")
-
-        # Clear session data
         session.pop('registration_data', None)
         session.pop('razorpay_order_id', None)
-        logger.info("Cleared session data")
-
         return jsonify({'status': 'success'})
-
     except Exception as e:
-        logger.error(f"General error in payment_callback: {str(e)}")
+        logger.error(f"Error in payment_callback: {e}")
         return jsonify({'status': 'error', 'message': str(e)})
+
 
 def send_confirmation_email(app, registration_data, payment_id):
     with app.app_context():
@@ -321,3 +283,4 @@ if __name__ == '__main__':
             logger.error(f"Error creating database tables: {str(e)}")
     
     app.run(debug=True)
+
