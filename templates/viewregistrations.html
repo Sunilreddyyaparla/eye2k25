@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Students</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Registered Students</h1>
+    {% if registrations %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Event</th>
+                    <th>College</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reg in registrations %}
+                    <tr>
+                        <td>{{ reg["Payment ID"] }}</td>
+                        <td>{{ reg["Name"] }}</td>
+                        <td>{{ reg["Email"] }}</td>
+                        <td>{{ reg["Mobile"] }}</td>
+                        <td>{{ reg["Event"] }}</td>
+                        <td>{{ reg["College"] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No registrations found.</p>
+    {% endif %}
+</body>
+</html>
