@@ -7,6 +7,7 @@ import threading
 from flask_sqlalchemy import SQLAlchemy
 import logging 
 from sqlalchemy import inspect
+from urllib.parse import urlparse
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -15,23 +16,29 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-# SQLite Configuration with absolute path
-basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, 'eye2k25_reg.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
+# Database Configuration
+DATABASE_URL = "postgresql://eye2k25_user:S4haUy7pTIEGbGCHDWt5cINm70ZvykVY@dpg-cu9pvolumphs73cfl9f0-a.oregon-postgres.render.com/eye2k25"
 
-logger.info(f"Database path: {db_path}")
+# Configure SQLAlchemy for PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_size': 5,
+    'max_overflow': 10,
+    'pool_timeout': 30,
+    'pool_recycle': 1800,
+}
+app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
 
+# Models
 class RegData(db.Model):
     __tablename__ = 'reg_data'
     payment_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    mobileno = db.Column(db.Integer, nullable=False)
+    mobileno = db.Column(db.BigInteger, nullable=False)  # Changed to BigInteger for larger phone numbers
     event = db.Column(db.String(100), nullable=False)
     college = db.Column(db.String(200), nullable=False)
 
@@ -41,22 +48,27 @@ class RegData(db.Model):
 class VisitorCount(db.Model):
     __tablename__ = 'visitor_count'
     id = db.Column(db.Integer, primary_key=True)
-    count = db.Column(db.Integer, default=0)
+    count = db.Column(db.BigInteger, default=0)  # Changed to BigInteger for larger numbers
 
     @classmethod
     def get_count(cls):
-        count_record = cls.query.first()
-        if count_record is None:
-            count_record = cls()
-            count_record.count = 0
-            db.session.add(count_record)
-            db.session.commit()
-        return count_record.count
+        try:
+            count_record = cls.query.first()
+            if count_record is None:
+                count_record = cls()
+                count_record.count = 0
+                db.session.add(count_record)
+                db.session.commit()
+            return count_record.count
+        except Exception as e:
+            logger.error(f"Error getting visitor count: {e}")
+            db.session.rollback()
+            return 0
 
     @classmethod
     def increment(cls):
         try:
-            with db.session.begin_nested():  # Use a savepoint
+            with db.session.begin_nested():
                 count_record = cls.query.with_for_update().first()
                 if count_record is None:
                     count_record = cls(count=1)
@@ -66,8 +78,8 @@ class VisitorCount(db.Model):
             db.session.commit()
             return count_record.count
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error incrementing visitor count: {e}")
+            db.session.rollback()
             return 0
 
 # Razorpay client configuration
@@ -298,14 +310,12 @@ def internal_server_error(e):
 
 if __name__ == '__main__':
     with app.app_context():
-        if not os.path.exists(db_path):
-            logger.info("Database does not exist. Creating new database...")
-        else:
-            logger.info("Database already exists")
-        
         try:
+            # Create tables if they don't exist
             db.create_all()
             logger.info("Database tables created successfully")
+            
+            # Log existing tables
             tables = inspect(db.engine).get_table_names()
             logger.info(f"Existing tables: {tables}")
 
@@ -316,8 +326,8 @@ if __name__ == '__main__':
                 db.session.add(initial_count)
                 db.session.commit()
                 logger.info("Initialized visitor count to 0")
-
+                
         except Exception as e:
-            logger.error(f"Error creating database tables: {str(e)}")
+            logger.error(f"Error initializing database: {str(e)}")
     
     app.run(debug=True)
