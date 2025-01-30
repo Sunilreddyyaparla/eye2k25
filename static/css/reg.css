@@ -9,9 +9,9 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 500px; /* Reduced size */
   margin: 0 auto;
-  padding: clamp(20px, 5vw, 30px);
+  padding: clamp(15px, 4vw, 25px); /* Slightly reduced padding */
   background-color: #f4f4f4;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -28,15 +28,15 @@ body {
 
 h1 {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: clamp(28px, 6vw, 32px);
+  margin-bottom: 25px; /* Slightly reduced */
+  font-size: clamp(26px, 5vw, 30px); /* Adjusted for consistency */
   color: #333;
 }
 
 label {
   display: block;
-  margin-bottom: 12px;
-  font-size: clamp(16px, 4vw, 18px);
+  margin-bottom: 10px;
+  font-size: clamp(15px, 3.5vw, 17px);
   color: #444;
   font-weight: 500;
 }
@@ -46,12 +46,12 @@ input[type="email"],
 input[type="tel"],
 select {
   width: 100%;
-  padding: 16px;
-  margin-bottom: 24px;
+  padding: 14px; /* Reduced padding */
+  margin-bottom: 20px; /* Reduced margin */
   border: 2px solid #ddd;
   border-radius: 8px;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 15px; /* Slightly smaller */
   transition: border-color 0.3s ease;
 }
 
@@ -66,15 +66,15 @@ select:focus {
 button {
   background-color: #4CAF50;
   color: white;
-  padding: 16px 24px;
+  padding: 14px 22px; /* Slightly smaller */
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 17px; /* Slightly smaller */
   width: 100%;
   max-width: 100%;
   display: block;
-  margin: 30px auto 0;
+  margin: 25px auto 0; /* Reduced margin */
   transition: background-color 0.3s ease;
 }
 
@@ -84,9 +84,9 @@ button:hover {
 
 .error {
   color: #e74c3c;
-  margin-bottom: 16px;
-  font-size: 16px;
-  padding: 12px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  padding: 10px;
   background-color: #fde8e8;
   border-radius: 6px;
   border-left: 4px solid #e74c3c;
@@ -95,37 +95,37 @@ button:hover {
 /* Enhanced Mobile Styles */
 @media screen and (max-width: 480px) {
   .container {
-      padding: 20px;
+      padding: 18px;
   }
   
   input[type="text"],
   input[type="email"],
   input[type="tel"],
   select {
-      padding: 18px;
-      font-size: 18px;
-      margin-bottom: 20px;
+      padding: 16px;
+      font-size: 16px;
+      margin-bottom: 18px;
   }
   
   label {
-      margin-bottom: 10px;
-      font-size: 18px;
+      margin-bottom: 9px;
+      font-size: 16px;
   }
   
   button {
-      padding: 18px;
-      font-size: 20px;
-      margin-top: 24px;
+      padding: 16px;
+      font-size: 18px;
+      margin-top: 22px;
   }
 }
 
 /* Small mobile devices */
 @media screen and (max-width: 320px) {
   .container {
-      padding: 16px;
+      padding: 14px;
   }
   
   h1 {
-      font-size: 24px;
+      font-size: 22px;
   }
 }
