@@ -1,13 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>EYE Event Registration</title>
+    <title>EYE 2K25 Event Registration</title>
     <link rel="icon" href="static/images/eye logo.png" type="image/icon type">
     <link rel="stylesheet" href="static/css/reg.css">
+    <script>
+        function validateForm() {
+            let fullname = document.getElementById("fullname").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let mobile = document.getElementById("mobile").value.trim();
+            let college = document.getElementById("yourcollege").value.trim();
+            let event = document.getElementById("event").value;
+
+            // Full name validation
+            if (fullname.length < 3) {
+                alert("Full Name must be at least 3 characters long.");
+                return false;
+            }
+
+            // Email validation (basic check)
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            // Mobile number validation (exactly 10 digits)
+            let mobilePattern = /^\d{10}$/;
+            if (!mobilePattern.test(mobile)) {
+                alert("Mobile number must be exactly 10 digits.");
+                return false;
+            }
+
+            // College name validation
+            if (college.length < 3) {
+                alert("College Name must be at least 3 characters long.");
+                return false;
+            }
+
+            // Event selection validation
+            if (event === "") {
+                alert("Please select an event.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>EYE 2K25 Event Registration</h1>
+        <h1> EYE 2K25 Event Registration</h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -15,7 +58,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <form method="POST" action="{{ url_for('registration') }}" novalidate>
+        <form method="POST" action="{{ url_for('registration') }}" onsubmit="return validateForm()" novalidate>
             <label for="fullname">Full Name:</label>
             <input type="text" id="fullname" name="fullname" required><br>
 
